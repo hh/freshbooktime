@@ -30,11 +30,11 @@ class FreshTime
   def initialize
     FreshBooks.setup($config['apihost'],$config['apikey'])
     FreshBooks::Client.list.each do |c|
-      puts c
-      FreshBooks::Project.list(:client_id=>c.client_id).each do |p|
-        puts p
-        FreshBooks::Task.list(:project_id=>p.project_id).each do |t|
-          puts t          
+      puts c.organization
+      FreshBooks::Project.list([['client_id', c.client_id],]).each do |p|
+        puts '  ' + p.name
+        FreshBooks::Task.list([['project_id', p.project_id],]).each do |t|
+          puts '    ' + t.name
         end
       end
     end
@@ -43,7 +43,14 @@ end
 
 FreshTime.new
 
+class TimeSheet
+  def initialize
+    FreshBooks.setup($config['apihost'],$config['apikey'])
+    FreshBooks::Time_Entry.list([['aoeu',1234],]).each do |t|
+      puts x.project_id,x.task_id,x.hours,x.notes
+    end                                 
+  end
+end
 
 
-#FreshBooks::Time_Entry.list.each {|x| puts x.project_id,x.task_id,x.hours,x.notes}
 
