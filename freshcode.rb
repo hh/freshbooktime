@@ -29,6 +29,8 @@ $config = YAML.load_file(File.join(File.dirname(__FILE__), "config.yml"))
 class FreshTime
   def initialize
     FreshBooks.setup($config['apihost'],$config['apikey'])
+  end
+  def projects_by_client
     FreshBooks::Client.list.each do |c|
       puts "#{c.client_id} : #{c.organization}"
       FreshBooks::Project.list([['client_id', c.client_id],]).each do |p|
@@ -39,16 +41,10 @@ class FreshTime
       end
     end
   end
-end
-
-FreshTime.new
-
-class TimeSheet
-  def initialize
+  def timesheet_for_client
     client_id = 13 # A specific client
     from_date = '2009-07-01'
     to_date =  '2009-07-15'
-    FreshBooks.setup($config['apihost'],$config['apikey'])
     FreshBooks::Project.list([['client_id', client_id],]).each do |p|
       FreshBooks::Task.list([['project_id', p.project_id],]).each do |t|
         FreshBooks::Time_Entry.list([
@@ -64,6 +60,10 @@ class TimeSheet
   end
 end
 
-TimeSheet.new
+t=FreshTime.new
+puts "projects by client"
+t.projects_by_client
 
+puts "timesheet for client 13"
+t.timesheet_for_client
 
