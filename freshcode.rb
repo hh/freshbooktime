@@ -26,16 +26,22 @@ $config = YAML.load_file(File.join(File.dirname(__FILE__), "config.yml"))
 
 # Listing of each important thing:
 
-class foo
+class FreshTime
   def initialize
     FreshBooks.setup($config['apihost'],$config['apikey'])
-    FreshBooks::Client.list.each {|x| cpt[x.client_id]=x.organization}
-    FreshBooks::Project.list.each {|x| puts x.name,x.project_id}
-    FreshBooks::Task.list.each {|x| puts x.name,x.task_id}
+    FreshBooks::Client.list.each do |c|
+      puts c
+      FreshBooks::Project.list(:client_id=>c.client_id).each do |p|
+        puts p
+        FreshBooks::Task.list(:project_id=>p.project_id).each do |t|
+          puts t          
+        end
+      end
+    end
   end
 end
 
-foo.new
+FreshTime.new
 
 
 
