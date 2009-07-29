@@ -1,482 +1,126 @@
 <html xmlns="http://www.w3.org/1999/xhtml"><head>
-    <!-- FIXME: need base -->
-    <base href="https://codecafe.freshbooks.com/report.php?reportType=td&amp;client=(13)&amp;staff=(10)&amp;project=(-1)&amp;s_year=2009&amp;e_year=2009&amp;s_month=06&amp;e_month=06">
-    <!-- FIXME: need to pull from name space -->
-		<title>Timesheet details - 06/01/09 to 06/30/09</title>
-		
-    <!-- FIXME: need local css -->
-<link href="/cache/images/2ndSite/styles/siteStyles.v1246369701.css" rel="stylesheet" type="text/css">
-<link href="/cache//images/2ndSite/styles/fbStyles.ve73feeee603708d08a0cfe86d5d9eb40.php?c1=0075CE&amp;c2=59A5DF&amp;c3=BFDCF3" rel="stylesheet" type="text/css">
+    <title><%= tsdata[:timesheet_title] %></title>
 
-<link href="styles.v1247001976.css" rel="stylesheet" type="text/css">
+    <link href="siteStyles.v1246369701.css" rel="stylesheet" type="text/css">
+    <link href="fbStyles.ve73feeee603708d08a0cfe86d5d9eb40.css" rel="stylesheet" type="text/css">
 
-<!--[if IE 6]><link rel="stylesheet" type="text/css" href="/cache/styles/ie6.v1244584144.css" /><![endif]-->
-<!--[if IE 7]><link rel="stylesheet" type="text/css" href="/cache/styles/ie7.v1244584144.css" /><![endif]-->
-</head>
+    <link href="styles.v1247001976.css" rel="stylesheet" type="text/css">
 
-<body style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; ">
-  <base href="https://codecafe.freshbooks.com/report.php?reportType=td&amp;client=(13)&amp;staff=(10)&amp;project=(-1)&amp;s_year=2009&amp;e_year=2009&amp;s_month=06&amp;e_month=06">
-  <div style="font-family: 'Century Gothic'; font-size: 12px; color: black; text-align: left; "><br class="webkit-block-placeholder"></div>
+    <!--[if IE 6]><link rel="stylesheet" type="text/css" href="/cache/styles/ie6.v1244584144.css" /><![endif]-->
+    <!--[if IE 7]><link rel="stylesheet" type="text/css" href="/cache/styles/ie7.v1244584144.css" /><![endif]-->
+  </head>
 
-  <!-- NOTE: This is client specific. -->
-  <center>
-    <img alt="Catalis, Inc" src="catalis_logo.png" />&nbsp;&nbsp;&nbsp;&nbsp;<img alt="CodeBlue" src="codeblue_logo.png" />
-  </center>
+  <body style="padding-top: 10px; padding-right: 10px; padding-bottom: 10px; padding-left: 10px; word-wrap: break-word; -webkit-nbsp-mode: space; -webkit-line-break: after-white-space; ">
+    <div style="font-family: 'Century Gothic'; font-size: 12px; color: black; text-align: left; "><br class="webkit-block-placeholder"></div>
 
-		<table border="0" align="center" cellpadding="0" cellspacing="0" style="position: static; z-index: auto; ">
-			<tbody><tr class="white bg_systemcolor1">
+    <center>
+      <!-- FIXME: Ugly hack -->
+      <%= tsdata[:customer_html_logo] %>
+    </center>
+
+    <table border="0" align="center" cellpadding="0" cellspacing="0" style="position: static; z-index: auto; ">
+      <tbody>
+        <tr class="white bg_systemcolor1">
           <th colspan="12" bgcolor="#666666" align="center"><%= tsdata[:timesheet_title] %></th>
-			</tr>
-			<tr><td height="30" colspan="3"></object></td></tr>
-				<%# <tr class="white">%>
-          <!-- FIXME: This may not be needed anymore -->
-				<%# 	<td bgcolor="#666666" colspan="11">&nbsp;&nbsp;<strong>June, 2009</strong></td>%>
-				<%# </tr>%>
-				<tr class="white bg_systemcolor1">
-					<th width="10" align="left">&nbsp;</th>
-					<th width="135" align="left">Date</th>
-					<th width="170" align="left">Project</th>
-					<th colspan="2" width="220" align="left">Notes</th>
-					<th colspan="4" width="100" align="right">Hours Logged</th>
-					</tr>
-							<tr>
-								<td colspan="11"></td></tr><tr><td height="5" colspan="11"></object></td>
-							</tr>
-							<tr height="15">
-								<td bgcolor="#CCCCCC" colspan="10" align="left">
- 									&nbsp;&nbsp;&nbsp;&nbsp;<strong>Week 3 (Jun 14th to 20th)</strong></td>
-							</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#cccccc"></object></td>
-							</tr>
-							<tr>
-								<td height="5" colspan="6"></object></td>
-							</tr>
-							<tr valign="top" align="left">
-								<td>&nbsp;</td>
-								<td>Tue - 06/16/09</td>
-								<td>ASP</td>
-								<td>Meetings</td>
-								<td>&nbsp;</td>
-								<td colspan="4" align="right">1.00</td>
-							</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>Clinic Support</td>
-									<td>Cat00071</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">8.00</td>
-								</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>Faxing</td>
-									<td>Initial Fax Research</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">3.00</td>
-								</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>General Support</td>
-									<td>Laptop Setup</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">2.00</td>
-								</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#cccccc"></object></td>
-							</tr>
-							<tr>
-								<td height="5" colspan="6"></object></td>
-							</tr>
-							<tr valign="top" align="left">
-								<td>&nbsp;</td>
-								<td>Wed - 06/17/09</td>
-								<td>General Support</td>
-								<td>Shadowing Taylor</td>
-								<td>&nbsp;</td>
-								<td colspan="4" align="right">10.00</td>
-							</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#cccccc"></object></td>
-							</tr>
-							<tr>
-								<td height="5" colspan="6"></object></td>
-							</tr>
-							<tr valign="top" align="left">
-								<td>&nbsp;</td>
-								<td>Thu - 06/18/09</td>
-								<td>Clinic Support</td>
-								<td>Shadowing Taylor at Colo</td>
-								<td>&nbsp;</td>
-								<td colspan="4" align="right">9.00</td>
-							</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>General Support</td>
-									<td>Shadowing Taylor at Office</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">2.00</td>
-								</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#cccccc"></object></td>
-							</tr>
-							<tr>
-								<td height="5" colspan="6"></object></td>
-							</tr>
-							<tr valign="top" align="left">
-								<td>&nbsp;</td>
-								<td>Fri - 06/19/09</td>
-								<td>Clinic Support</td>
-								<td>Colo and Drives for Cat00071</td>
-								<td>&nbsp;</td>
-								<td colspan="4" align="right">2.00</td>
-							</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>Clinic Support</td>
-									<td>Onsite preparing Shuttle</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">3.00</td>
-								</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#cccccc"></object></td>
-							</tr>
-							<tr>
-								<td height="5" colspan="6"></object></td>
-							</tr>
-							<tr valign="top" align="left">
-								<td>&nbsp;</td>
-								<td>Sat - 06/20/09</td>
-								<td>Clinic Support</td>
-								<td>Cat00071</td>
-								<td>&nbsp;</td>
-								<td colspan="4" align="right">5.00</td>
-							</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>Faxing</td>
-									<td>Research on development process and faxing.</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">4.00</td>
-								</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#000000"></object></td>
-							</tr>
-							<tr>
-								<td colspan="5">&nbsp;</td>
-								<td colspan="2" align="right"><strong>Week Total:</strong></td>
-								<td colspan="4" align="right"><strong>49.00</strong></td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr><td height="10" colspan="3"></object></td></tr>
-							<tr height="15">
-								<td bgcolor="#CCCCCC" colspan="10" align="left">
- 									&nbsp;&nbsp;&nbsp;&nbsp;<strong>Week 4 (Jun 21st to 27th)</strong></td>
-							</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#cccccc"></object></td>
-							</tr>
-							<tr>
-								<td height="5" colspan="6"></object></td>
-							</tr>
-							<tr valign="top" align="left">
-								<td>&nbsp;</td>
-								<td>Mon - 06/22/09</td>
-								<td>Clinic Support</td>
-								<td>Data Recovery on Failed Drives</td>
-								<td>&nbsp;</td>
-								<td colspan="4" align="right">3.00</td>
-							</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>Faxing</td>
-									<td>More research with Taylor and Caleb</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">3.00</td>
-								</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>General Support</td>
-									<td>Trac Migration Research</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">1.00</td>
-								</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#cccccc"></object></td>
-							</tr>
-							<tr>
-								<td height="5" colspan="6"></object></td>
-							</tr>
-							<tr valign="top" align="left">
-								<td>&nbsp;</td>
-								<td>Tue - 06/23/09</td>
-								<td>ASP</td>
-								<td></td>
-								<td>&nbsp;</td>
-								<td colspan="4" align="right">4.00</td>
-							</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>ASP</td>
-									<td>ASP OS Selection and Planning</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">4.00</td>
-								</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>Clinic Support</td>
-									<td>Drive Recovery</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">2.00</td>
-								</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>General Support</td>
-									<td>Local Questions and Support</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">1.00</td>
-								</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#cccccc"></object></td>
-							</tr>
-							<tr>
-								<td height="5" colspan="6"></object></td>
-							</tr>
-							<tr valign="top" align="left">
-								<td>&nbsp;</td>
-								<td>Wed - 06/24/09</td>
-								<td>Faxing</td>
-								<td>Research</td>
-								<td>&nbsp;</td>
-								<td colspan="4" align="right">4.50</td>
-							</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>General Support</td>
-									<td>Meetings</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">2.00</td>
-								</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#cccccc"></object></td>
-							</tr>
-							<tr>
-								<td height="5" colspan="6"></object></td>
-							</tr>
-							<tr valign="top" align="left">
-								<td>&nbsp;</td>
-								<td>Thu - 06/25/09</td>
-								<td>Faxing</td>
-								<td>Research</td>
-								<td>&nbsp;</td>
-								<td colspan="4" align="right">5.50</td>
-							</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#cccccc"></object></td>
-							</tr>
-							<tr>
-								<td height="5" colspan="6"></object></td>
-							</tr>
-							<tr valign="top" align="left">
-								<td>&nbsp;</td>
-								<td>Fri - 06/26/09</td>
-								<td>Faxing</td>
-								<td>Yet more research</td>
-								<td>&nbsp;</td>
-								<td colspan="4" align="right">5.50</td>
-							</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>General Support</td>
-									<td>Timesheets</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">1.00</td>
-								</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#cccccc"></object></td>
-							</tr>
-							<tr>
-								<td height="5" colspan="6"></object></td>
-							</tr>
-							<tr valign="top" align="left">
-								<td>&nbsp;</td>
-								<td>Sat - 06/27/09</td>
-								<td>Faxing</td>
-								<td>Model faxing interface</td>
-								<td>&nbsp;</td>
-								<td colspan="4" align="right">1.00</td>
-							</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#000000"></object></td>
-							</tr>
-							<tr>
-								<td colspan="5">&nbsp;</td>
-								<td colspan="2" align="right"><strong>Week Total:</strong></td>
-								<td colspan="4" align="right"><strong>37.50</strong></td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr><td height="10" colspan="3"></object></td></tr>
-							<tr height="15">
-								<td bgcolor="#CCCCCC" colspan="10" align="left">
- 									&nbsp;&nbsp;&nbsp;&nbsp;<strong>Week 5 (Jun 28th to 30th)</strong></td>
-							</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#cccccc"></object></td>
-							</tr>
-							<tr>
-								<td height="5" colspan="6"></object></td>
-							</tr>
-							<tr valign="top" align="left">
-								<td>&nbsp;</td>
-								<td>Mon - 06/29/09</td>
-								<td>ASP</td>
-								<td>Asp discussion and planning</td>
-								<td>&nbsp;</td>
-								<td colspan="4" align="right">0.50</td>
-							</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>Faxing</td>
-									<td>Trying to understand current implementation. Worked with Caleb and Taylor.</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">7.00</td>
-								</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>General Support</td>
-									<td>General Office Support, Tickets, and Timesheets</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">3.00</td>
-								</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#cccccc"></object></td>
-							</tr>
-							<tr>
-								<td height="5" colspan="6"></object></td>
-							</tr>
-							<tr valign="top" align="left">
-								<td>&nbsp;</td>
-								<td>Tue - 06/30/09</td>
-								<td>ASP</td>
-								<td>Redhat Call</td>
-								<td>&nbsp;</td>
-								<td colspan="4" align="right">1.00</td>
-							</tr>
-								<tr>
-									<td height="1" colspan="2"></object></td>
-									<td height="1" colspan="7" bgcolor="#cccccc"></object></td>
-								</tr>
-								<tr valign="top" align="left">
-									<td>&nbsp;</td>
-									<td>&nbsp;</td>
-									<td>General Support</td>
-									<td>Paolo Interview</td>
-									<td>&nbsp;</td>
-									<td colspan="4" align="right">1.00</td>
-								</tr>
-							<tr>
-								<td height="1" colspan="10" bgcolor="#000000"></object></td>
-							</tr>
-							<tr>
-								<td colspan="5">&nbsp;</td>
-								<td colspan="2" align="right"><strong>Week Total:</strong></td>
-								<td colspan="4" align="right"><strong>12.50</strong></td>
-								<td>&nbsp;</td>
-							</tr>
-							<tr><td height="10" colspan="3"></object></td></tr>
-						<tr>
-							<td height="5" colspan="9" bgcolor="#000000"></object></td>
-						</tr>
-						<tr>
-							<td colspan="5">&nbsp;</td>
-							<td colspan="2" align="right"><strong>Time Period Total:</strong></td>
-							<td colspan="4" align="right"><strong>99.00</strong></td>
-							<td>&nbsp;</td>
-						</tr>
-						<tr><td height="50" colspan="3"></object></td></tr>
-		<tr>
-			<td height="5" colspan="9" bgcolor="#0075CE"></object></td>
-		</tr>
-		<tr>
-			<td height="5" colspan="9"></object></td>
-		</tr>
-		<tr>
-			<td colspan="7" align="right"></td><td align="right"><b><br></b></td>
-			<td>&nbsp;</td></tr></tbody></table>
-		
-		
-<div style="font-family: 'Century Gothic'; font-size: 12px; color: black; text-align: left; "><br class="webkit-block-placeholder"></div></body></html>
+        </tr>
+        <tr><td height="30" colspan="3"></td></tr>
+        <tr class="white bg_systemcolor1">
+          <th width="10" align="left">&nbsp;</th>
+          <th width="135" align="left">Date</th>
+          <th width="170" align="left">Project</th>
+          <th colspan="2" width="220" align="left">Notes</th>
+          <th colspan="4" width="100" align="right">Hours Logged</th>
+        </tr>
+        <tr>
+          <td colspan="11"></td></tr><tr><td height="5" colspan="11"></td>
+        </tr>
+
+        <% tsdata[:weeksheets].each do |range,timesheet| %>
+          <% week_start = range[0] %><% week_end = range[1] %><% weekly_total = timesheet[:weekly_total] %>
+
+          <tr height="15">
+            <td bgcolor="#CCCCCC" colspan="10" align="left">
+              &nbsp;&nbsp;&nbsp;&nbsp;<strong>Week <%= week_start %> - <%= week_end %></strong></td>
+          </tr>
+
+          <% timesheet[:weekly_timesheet].each do |date,entries| %>
+            <% dateshown = false %>
+
+            <% entries.each do |hours,project,note| %>
+              <% if dateshown %>
+                <!-- All other entries for the day -->
+                <%# [project,note,hours].inspect %>
+                <tr>
+                  <td height="1" colspan="2"></td>
+                  <td height="1" colspan="7" bgcolor="#cccccc"></td>
+                </tr>
+                <tr valign="top" align="left">
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                  <td><%= project %></td>
+                  <td><%= note %></td>
+                  <td>&nbsp;</td>
+                  <td colspan="4" align="right"><%= hours %></td>
+                </tr>
+              <% else %>
+                <!-- SHOW THIS FIRST for each day-->
+                <%# [date,project,note,hours].inspect %>
+                <% dateshown = true %>
+                <tr>
+                  <td height="1" colspan="10" bgcolor="#cccccc"></td>
+                </tr>
+                <tr>
+                  <td height="5" colspan="6"></td>
+                </tr>
+                <tr valign="top" align="left">
+                  <td>&nbsp;</td>
+                  <td><%= date %></td>
+                  <td><%= project %></td>
+                  <td><%= note %></td>
+                  <td>&nbsp;</td>
+                  <td colspan="4" align="right"><%= hours %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          <%end %>
+
+          <tr>
+            <td height="1" colspan="10" bgcolor="#000000"></td>
+          </tr>
+          <tr>
+            <td colspan="5">&nbsp;</td>
+            <td colspan="2" align="right"><strong>Week Total:</strong></td>
+            <td colspan="4" align="right"><strong><%= weekly_total %></strong></td>
+            <td>&nbsp;</td>
+          </tr>
+          <tr><td height="10" colspan="3"></td></tr>
+        <% end %>
+
+        <tr>
+          <td height="5" colspan="9" bgcolor="#000000"></td>
+        </tr>
+        <tr>
+          <td colspan="5">&nbsp;</td>
+          <td colspan="2" align="right"><strong>Time Period Total:</strong></td>
+          <td colspan="4" align="right"><strong><%= tsdata[:totalhours] %></strong></td>
+          <td>&nbsp;</td>
+        </tr>
+        <tr><td height="50" colspan="3"></td></tr>
+        <tr>
+          <td height="5" colspan="9" bgcolor="#0075CE"></td>
+        </tr>
+        <tr>
+          <td height="5" colspan="9"></td>
+        </tr>
+        <tr>
+          <td colspan="7" align="right"></td><td align="right"><b><br></b></td>
+          <td>&nbsp;</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="font-family: 'Century Gothic'; font-size: 12px; color: black; text-align: left; ">
+      <br class="webkit-block-placeholder"></div>
+
+  </body>
+</html>

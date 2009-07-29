@@ -1,0 +1,1435 @@
+/*	Copyright 2004 - 2ndSite Inc.
+	DO NOT copy or re-distribute without written consent from 2ndSite Inc.
+	Ver.	Author		Changes
+	-------------------------------------------------------------------------------------------------
+	3.0		DT			Added .invoice style for regular and recurring invoices
+	3.1		DT			Modified boxStringsCAP
+	-------------------------------------------------------------------------------------------------
+*/
+
+/* main stuff */
+
+
+.fontCurrency {
+	font-size: 10px;
+}
+.barGrey {
+	border-top: 1px solid #ddd;
+	margin: 15px 0;
+}
+.barGrey2 {
+	border-top: 1px solid #ddd;
+	margin: 5px 0;
+}
+.mainPadding {
+	padding: 20px;
+	text-align: left;
+}
+label {
+	cursor: pointer;
+}
+
+abbr[title] {
+	border-bottom: none;
+}
+
+
+.tdStyle {
+	font-family: Verdana, sans-serif;
+	font-size: 12px;
+	color: #000;
+}
+a.tdStyle:link, a.tdStyle:visited, a.tdStyle:active {
+	color: #00f;
+}
+a.tdStyle:hover {
+	background-color: #00F;
+	color: #FFF;
+	text-decoration: none;
+}
+
+
+
+.extraSmallFont {
+	font-size: 10px;
+	font-family: Verdana, sans-serif;
+}
+.extraSmallFont2 {
+	font-size: 11px;
+	font-family: Verdana, sans-serif;
+}
+.extraSmallFont3 {
+	font-size: 11px;
+	font-family: Verdana, sans-serif;
+}
+.extraSmallFont4 {
+	font-size: 10px;
+	font-family: Verdana, sans-serif;
+	font-weight: bold;
+}
+
+
+.navSmallFont {
+	font-size: 12px;
+	font-family: Verdana, sans-serif;
+	color: #0000FF;
+}
+a.navSmallFont:link {
+	color: #0000FF;
+	text-decoration: none;
+}
+a.navSmallFont:visited {
+	color: #0000FF;
+	text-decoration: none;
+}
+a.navSmallFont:hover {
+	color: #0000FF;
+	text-decoration: underline;
+}
+a.navSmallFont:active {
+	color: #0000FF;
+	text-decoration: underline;
+}
+
+
+a.extraSmallFont2:link {
+	color: #000000;
+	text-decoration: underline;
+	font-weight: bold;
+
+}
+a.extraSmallFont2:visited {
+	color: #000000;
+	text-decoration: underline;
+	font-weight: bold;
+}
+a.extraSmallFont2:hover {
+	color: #0000FF;
+	text-decoration: underline;
+	font-weight: bold;
+}
+a.extraSmallFont2:active {
+	color: #0000FF;
+	text-decoration: underlined;
+	font-weight: bold;
+}
+a.extraSmallFont3:link {
+	color: #0000FF;
+	text-decoration: underline;
+}
+a.extraSmallFont3:visited {
+	color: #0000FF;
+	text-decoration: underline;
+}
+a.extraSmallFont3:hover {
+	color: #FFFFFF;
+	background-color: #0000FF;
+	text-decoration: none;
+}
+a.extraSmallFont3:active {
+	color: #FFFFFF;
+	background-color: #0000FF;
+	text-decoration: none;
+}
+a.extraSmallFont4:link {
+	color: #0000FF;
+	text-decoration: none;
+}
+a.extraSmallFont4:visited {
+	color: #0000FF;
+	text-decoration: none;
+}
+a.extraSmallFont4:hover {
+	color: #FFFFFF;
+	background-color: #0000FF;
+	text-decoration: none;
+}
+a.extraSmallFont4:active {
+	color: #FFFFFF;
+	background-color: #0000FF;
+	text-decoration: none;
+}
+
+
+
+.tdStyleRed { font-family: Verdana, sans-serif; font-size: 10pt; color: #ff0000; line-height: 15px; }
+.selectStyle { font-family: Verdana, sans-serif; font-size: 9px; color: #000000; line-height: 9px; ; font-style: normal; background-color: #FFFFFF}
+
+.boxStringsCAP { 
+	font-family: Verdana, sans-serif; 
+	font-size: 10px; 
+	color: #000000; 
+	font-weight: normal;
+}
+
+a.boxStringsCAP:link, a.boxStringsCAP:active, a.boxStringsCAP:visited { 
+	background-color: #FFFFFF;
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+	border: 1px solid #555555;
+	padding: 1px 5px;
+	line-height: 15px;
+}
+a.boxStringsCAP:hover { 
+	background-color: #339900;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+.glossaryItem {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #0000FF;
+}
+.notify {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #000000;
+}
+.statusPending {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #000000;
+}
+.statusSent {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #000000;
+}
+.statusViewed {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #000000;
+}
+.statusPaid {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #009900;
+}
+.statusPartial {
+	font-size: 10px;
+	color: #e27100;
+}
+.statusDisputed {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #FF0000;
+}
+.statusFailed {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #F00;
+	text-decoration: underline;
+}
+.statusOutstanding {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+}
+a.statusFailed:link {
+	color: #FF0000;
+	text-decoration: underline;
+}
+a.statusFailed:visited {
+	color: #FF0000;
+	text-decoration: underline;
+}
+a.statusFailed:hover {
+	color: #FF0000;
+	text-decoration: none;
+}
+a.statusFailed:active {
+	color: #FF0000;
+	text-decoration: underlined;
+}
+.statusText {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #333333;
+}
+.statusAccepted {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #090;
+}
+.statusInvoiced {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #999;
+}
+.statusReplied {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #F00;
+}
+.statusRecouped {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #090;
+}
+a.invoiced_link:link, a.invoiced_link:active, a.invoiced_link:visited {
+	text-decoration: none;
+}
+a.invoiced_link:hover {
+	color: #999;
+	background-color: transparent;
+	text-decoration: underline;
+}
+
+/* grey boxes */
+.boxBorder {
+	background-color: #FFFFFF;
+	border: 1px solid #AAAAAA;
+	padding: 3px;
+}
+.boxBg {
+	background-color: #EEEEEE;
+}
+
+
+/* banner text box */
+.bannerTextbox{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size:12px;
+}
+
+/* system details styles */
+.systemDetails {
+	font-family: Verdana, sans-serif;
+	font-size: 10pt;
+	color: #333333;
+	line-height: 15px;
+
+}
+.systemDetailsTitle {
+	font-weight: bold;
+	text-align: right;
+	vertical-align:middle;
+}
+
+
+/* support */
+.fontSupport {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	color: #333333;
+	line-height: 15px;
+}
+a.fontSupport:link, a.fontSupport:active, a.fontSupport:visited {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	color: #0000FF;
+	line-height: 15px;
+	text-decoration: underline;
+}
+a.fontSupport:hover {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	color: #0000FF;
+	line-height: 15px;
+	text-decoration: none;
+}
+.supportGreen {
+	font-family: Verdana, sans-serif;
+	font-size: 13px;
+	font-weight: bold;
+	color: #2F8F0E;
+	line-height: 15px;
+}
+.subjectBig {
+	font-family: Verdana, sans-serif;
+	font-size: 18px;
+	font-weight: bold;
+	color: #333333;
+	line-height: 20px;
+}
+
+.tdSmall {
+	font-family: Verdana, sans-serif;
+	font-size: 9pt;
+	color: #333333;
+	line-height: 14px;
+}
+
+/* top right links */
+.smallTabsFont {
+	font-size: 9px;
+	color: #FFFFFF;
+	line-height: 15px;
+}
+a.smallTabs:link, a.smallTabs:active, a.smallTabs:visited {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+a.smallTabs:hover {
+	color: #FFFFFF;
+	text-decoration: underline;
+}
+
+/* order custom login styles */
+.orderCustomTitle {
+	font-family: Verdana, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #333333;
+}
+.orderCustomSmall {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	color: #333333;
+}
+.orderCustomPhone {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #0000FF;
+}
+a.orderCustomPhone:link, a.orderCustomPhone:active, a.orderCustomPhone:visited {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #0000FF;
+}
+a.orderCustomPhone:hover {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #0000FF;
+	text-decoration: none;
+}
+
+.tellText {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	color: #333333;	
+}
+a.tellSmall:link, a.tellSmall:active, a.tellSmall:visited {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #0000FF;	
+	text-decoration: underline;
+}
+a.tellSmall:hover {
+	font-family: Verdana, sans-serif;
+	font-size: 10px;
+	color: #0000FF;	
+	text-decoration: none;
+} 
+.thInvoice{
+	font-family: Verdana, sans-serif;
+	font-size: 10pt;
+	color: #FFFFFF;
+	line-height: 22px;
+	text-align: left;
+}
+
+
+.Error2 {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFFFFF;
+	background-color: #FF0000;
+	padding: 1px;
+}
+/* FAILED TRANSACTION ERROR MESSAGES */
+.Error3 {
+	font-weight: bold;
+	color: #fff;
+	background-color: #f00;
+	padding: 1px;
+}
+/* IN-LINE ERROR MESSAGES */
+.error {
+	background-color: #f00;
+	color: #fff;
+	padding: 1px;
+}
+
+a.linkSmall:link, a.linkSmall:active, a.linkSmall:visited {
+	font-size: 11px;
+	color: #0000FF;
+	text-decoration: underline;
+}
+a.linkSmall:hover {
+	text-decoration: none;
+}
+
+
+
+
+/* BORDER AROUND BOXES */
+.borderGrey {
+	border: 1px solid #BBBBBB;
+}
+
+/* LIGHT GREEN BACKGROUND */
+.bgLightGreen {
+	background-color: #D9FFD2;
+}
+
+/* LIGHT BLUE BACKGROUND */
+.bgLightBlue {
+	background-color: #D7E8F2;
+}
+
+/* LIGHT GREEN BACKGROUND */
+.bgOrange {
+	background-color: #FFEDCF;
+}
+
+
+/* FORM TITLES - DEFINES THE TITLES FOR THE INPUT FIELDS */
+.formTitle {
+	font-weight: bold;
+	text-align: right;
+	vertical-align: middle;
+}
+.formTitleTop {
+	vertical-align: top;
+	font-weight: bold;
+	text-align: right;
+	line-height: 22px;
+}
+.leftTitle{
+	font-weight: bold;
+	text-align: left;
+	vertical-align: middle;
+}
+.rightTitle{
+	font-weight: bold;
+	text-align: right;
+	vertical-align: middle;
+}
+.centerTitle{
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+}
+
+/* FORM FIELDS */
+form {
+	margin: 0;
+	padding: 0;
+}
+.errorInput {
+	background-image: url(/images/2ndSite/input-errorbg.gif);
+	background-repeat: no-repeat;
+	background-color: #fcc;
+	border: 1px solid #f00 !important;
+	outline: 0px !important;
+}
+.happyInput {
+	background-color: #d9ffb2;
+	border: 1px solid #b8d998 !important;
+	outline: 0px !important;
+}
+.formText {
+	width: 250px;
+}
+.formTextReq {
+	/* background-color: #FFFDD9;*/
+	width: 250px;			
+}
+.formTextMed{
+	width: 150px;	
+}
+.formTextMedReq{
+	/* background-color: #FFFDD9;*/
+	width: 150px;		
+}
+.formTextSmall {
+	width: 100px;	
+}
+.formTextSmallReq {
+	/* background-color: #FFFDD9;*/
+	width: 100px;		
+}
+.formTextMini {
+	width: 50px;	
+}
+.formTextMiniReq {
+	/* background-color: #FFFDD9;*/
+	width: 50px;		
+}
+.formTextLarge{
+	width: 500px;	
+}
+.formTextLargeReq {
+	/* background-color: #FFFDD9;*/
+	width: 500px;		
+}
+.formSelect {
+}
+.formSelectReq {
+	/* background-color: #FFFDD9;*/
+}
+.formSelectSmall {
+	font-size: 8pt;
+}
+.formSelectSmallReq {
+	/* background-color: #FFFDD9;*/
+	font-size: 8pt;
+}
+.formArea {
+	font-size: 8pt;
+	height: 50px;
+	width: 350px;
+}
+.formAreaReq {
+	/* background-color: #FFFDD9;*/
+	height: 50px;
+	width: 350px;
+}
+.formAreaLarge {
+	font-size: 8pt;
+	height: 100px;
+	width: 500px;		
+}
+.formAreaLargeReq {
+	/* background-color: #FFFDD9;*/
+	font-size: 8pt;
+	height: 100px;
+	width: 500px;		
+}
+.formAreaMini {
+	font-size: 8pt;
+	height: 50px;
+	width: 250px;		
+}
+.formAreaMiniReq {
+	/* background-color: #FFFDD9;*/
+	font-size: 8pt;
+	height: 50px;
+	width: 250px;		
+}
+.formAreaThin {
+	font-size: 8pt;
+	height: 75px;
+	width: 250px;	
+}
+.formAreaThinReq {
+	/* background-color: #FFFDD9;*/
+	font-size: 8pt;
+	height: 75px;
+	width: 250px;	
+}
+
+/* radio button */
+.radioButton {
+	cursor: pointer;
+	vertical-align: text-bottom;
+}
+
+
+.titleBar {
+	font-family: Verdana, sans-serif;
+	font-size: 12px;
+	color: #FFFFFF;
+	text-align: center;
+	height: 20px;
+}
+
+/* TEXTBOX FOR BILLINGARM URL */
+.url {
+	font-size: 12px;
+	font-weight: bold;
+	border: 0;
+}
+
+
+/***********************************/
+.bigButton { 
+	font-family: Verdana, sans-serif; 
+	font-size: 14px; 
+	color: #000000; 
+	font-weight: normal;
+}
+
+a.bigButton:link, a.bigButton:active, a.bigButton:visited { 
+	background-color: #FFFFFF;
+	font-family: Verdana, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #000000;
+	text-decoration: none;
+	border: 1px solid #555555;
+	padding: 1px 5px;
+	line-height: 15px;
+}
+a.bigButton:hover { 
+	background-color: #339900;
+	color: #FFFFFF;
+	text-decoration: none;
+}
+
+.bigGreenButton { 
+	background-color: #339900;
+	font-family: Verdana, sans-serif; 
+	font-size: 14px; 
+	color: #FFFFFF;
+	font-weight: normal;
+}
+
+a.bigGreenButton:link, a.bigGreenButton:active, a.bigGreenButton:visited { 
+	background-color: #339900;
+	font-family: Verdana, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	color: #FFFFFF;
+	text-decoration: none;
+	border: 1px solid #555555;
+	padding: 1px 5px;
+	line-height: 15px;
+}
+a.bigGreenButton:hover { 
+	background-color: #FFFFFF;
+	color: #000000;
+	text-decoration: none;
+}
+
+.dash {
+	border-top: 1px dashed #ccc;
+}
+
+.blueBox {
+	background-color: #EBF3FF;
+	border: 1px solid #BFDDF8;
+	padding: 20px;
+}
+
+
+/* big green text */
+.greenBig {	
+	font-size: 20px;
+	font-weight: bold;
+	color: #00A00B;
+	line-height: 24px;
+}
+.totalBorder{
+	border-bottom: 1px solid #000000;
+}
+
+
+
+
+/* rounded boxes with border - colours are defined in styles.php */
+.r1 {
+	background-color: #4B98DC;
+	height: 1px;
+	margin: 0 5px;
+}
+.r2 {
+	background-color: #DCEEFF;
+	border: 2px solid #4B98DC;
+	border-top: 0;
+	border-bottom: 0;
+	height: 1px;
+	margin: 0 3px;
+}
+.r3 {
+	background-color: #DCEEFF;
+	border: 1px solid #4B98DC;
+	border-top: 0;
+	border-bottom: 0;
+	height: 1px;
+	margin: 0 2px;
+}
+.r4 {
+	background-color: #DCEEFF;
+	border: 1px solid #4B98DC;
+	border-top: 0;
+	border-bottom: 0;
+	height: 2px;
+	margin: 0 1px;
+}
+.rMain {
+	background-color: #DCEEFF;
+	border: 1px solid #4B98DC;
+	border-top: 0;
+	border-bottom: 0;
+	padding: 10px;
+}
+
+
+
+/* new timesheet styles */
+.timeTab {
+	text-align: center;
+	font-weight: bold;
+	width: 120px;
+	margin-right: 5px;
+	float: left;
+}
+.timer {
+	background-color: #FFF;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 50px;
+	font-weight: bold;
+	text-align: center;
+	width: 260px;
+	border: 1px solid #97BCEB;
+}
+.formTimeText {
+	font-size: 8pt;
+	width: 38px;
+	vertical-align: middle;
+}
+.moTotals {
+	padding-right: 26px;
+}
+
+.textBig {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 32px;
+	font-weight: bold;
+	line-height: 34px;
+}
+
+
+
+
+/* ADDED IN FOR BASECAMP */
+
+.clBoth {
+	clear: both;
+}
+.lineGrey {
+	border-bottom: 1px solid #CCC;
+	margin: 20px 0;
+}
+.lineGrey2 {
+	border-bottom: 1px solid #CCC;
+}
+
+.borderGrey {
+	border: 1px solid #DDD;
+}
+.borderGreen {
+	border: 1px solid #74DC74;
+}
+.tblPad td, .tblPad th {
+	padding: 0 7px;
+}
+a.white:link, a.white:visited {
+	color: #FFF;
+	text-decoration: underline;
+}
+a.white:hover, a.white:active {
+	color: #FFF;
+	background-color: #00F;
+	text-decoration: none;
+}
+
+
+
+
+
+.greenBorder {
+	border: 1px solid #376a00;
+}
+.yellowBorder {
+	border: 1px solid #c4c41c;
+}
+.orangeBorder {
+	border: 1px solid #774600;
+}
+
+
+/* report card styles */
+.rcBorder {
+	border: 1px solid #ccc;
+	margin: 0 20px;
+}
+.rcTop {
+	background-color: #eee;
+	padding: 15px;
+	border-bottom: 1px solid #ccc;
+	line-height: 18px;
+	text-align: center;
+}
+.rcTop h2 {
+	font-size: 24px;
+}
+#rcTable th, .rcBotBorder {
+	border-bottom: 1px solid #ccc;
+}
+#rcTable label {
+	border-bottom: 1px dashed #999;
+}
+#rcTable td.rcLeft {
+	text-align: left;
+	padding-left: 20px;
+}
+#rcTable tr.rcRow1 {
+	background-color: #ffc;
+}
+#rcTable tr.rcRow2 {
+	background-color: #ffe;
+}
+#rcTable td.rcResult {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	font-weight: bold;
+}
+.rating {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 22px;
+	font-weight: bold;
+	color: #000;
+	padding: 15px 0;
+}
+.rcBot {
+	color: #777;
+	padding-left: 20px;
+}
+.rcLegend {
+	color: #000;
+	float: right;
+}
+.rcBot img {
+	vertical-align: middle;
+	margin: 2px 0;
+}
+
+
+/* report card countdown timer */
+#countDown {
+	font-size: 11px;
+	text-align: center;
+	margin: 12px 0;
+}
+#countDown strong {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 17px;
+}
+
+/* report card box - homepage right column */
+.rcBox {
+/*	background-image: url(../homepage/report-cards.gif); */
+	background-image: url(/images/2ndSite/homepage/report-cards2.gif);
+	height: 160px;
+	padding: 0 15px;
+}
+.rcBoxText {
+	font-size: 13px;
+	font-weight: bold;
+	color: #333;
+/*	color: #569f00; report cards are here */
+	text-align: center;
+}
+.rcBoxSmall {
+	font-size: 11px;
+	color: #333;
+/*	color: #569f00; report cards are here */
+	text-align: center;
+	line-height: 13px;
+}
+
+
+.tooltip {
+	background-color: #fff;
+	font-size: 11px;
+	color: #000;
+	text-align: left;
+	line-height: 14px;
+	border: 1px solid #000;
+	position: absolute;
+	padding: 5px;
+	width: 300px;
+	top: -48px;
+	display: none;
+}
+.tooltip2 {
+	background-color: #fff;
+	font-size: 11px;
+	color: #000;
+	text-align: left;
+	line-height: 14px;
+	border: 1px solid #000;
+	position: absolute;
+	padding: 5px;
+	width: 300px;
+	left: 50px;
+	display: none;
+}
+
+
+
+
+/* main page */
+.pageTitle {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	font-size: 18px;
+}
+/* top bar */
+.topBar {
+	font-family: Verdana, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	color: #FFF;
+	text-align: left;
+	width: 760px;
+	padding: 4px 0;
+}
+.topLinks {
+	font-size: 10px;
+	float: right;
+}
+
+
+/* invoice/estimate links at the top */
+#showLinks a {
+	margin: 0 10px;
+}
+#showDispute {
+	display: none;
+	overflow: hidden;
+	padding: 0;
+	clear: both;
+}
+#showDispute .showDisputePad {
+	padding: 0 0 20px 0;
+}
+#showDispute div.disputeTitle {
+	font-weight: bold;
+	text-align:left;
+	padding: 0 0 5px 13px;
+}
+#showLinks div.inv_paid {
+	font-weight: bold;
+}
+
+
+
+/* connect systems/received invoices thickbox */
+#connect_systems_prompt {
+	text-align: center;
+}
+#connect_systems_prompt a {
+	color: #000;
+	text-decoration: none;
+	margin: 0 20px;
+}
+#connect_systems_prompt a:hover {
+	background-color: transparent;
+	color: #00f;
+}
+#connect_systems_prompt img {
+	vertical-align: middle;
+}
+
+
+/* settings - configure tabs preview */
+.tabPreviewBorder {
+	width: 115px;
+}
+.tabPreview {
+	width: 75px;
+	padding: 6px 0;
+	margin-top: 5px;
+}
+.tabPreview strong {
+	color: #FFF;
+	font-size: 11px;
+	width: 75px;
+}
+
+
+/* estimates/invoices conversation bubble */
+.convo {
+	background-color: #fffbe1;
+	border: 1px solid #e0d9a8;
+	border-top: 0;
+	border-bottom: 0;
+	padding: 0 15px;
+}
+.convoDate {
+	font-size: 10px;
+	color: #999;
+	line-height: 12px;
+}
+
+
+
+.enableapi {
+	padding: 20px 10px;
+}
+.enableapi.api_arrow {
+	background-image: url(/images/2ndSite/arrow-orange.gif);
+	background-repeat: no-repeat;
+}
+.api_hl {
+	background-color: #e0d9a8;
+	padding: 1px;
+}
+input.apikey_values {
+	background-color: transparent;
+	text-align: center;	
+	border: 0;
+	width: 100%;
+	margin: 5px 0;
+}
+input.apikey_values_staff {
+	background-color: transparent;
+	border: 0;
+	width: 460px;
+}
+input.apikey_values:focus, .input.apikey_values_staff:focus {
+	outline: 0;
+}
+
+/* need help/community page */
+a.box1:link, a.box1:active, a.box1:visited {
+	background-color: #dceeff;
+	border: 1px solid #a5b2bf;
+	color: #000;
+	text-decoration: none;
+	padding: 10px;
+	display: block;
+}
+a.box1:hover {
+	background-color: #b6d6f4;
+	border: 1px solid #6f8faf;
+	color: #000;
+	text-decoration: none;
+}
+a.box2:link, a.box2:active, a.box2:visited {
+	background-color: #FFFBE1;
+	color: #000;
+	text-decoration: none;
+	border: 1px solid #E0D9A8;
+	padding: 10px;
+	display: block;
+}
+a.box2:hover {
+	background-color: #F8F1BE;
+	border: 1px solid #C0B986;
+	color: #000;
+	text-decoration: none;
+}
+.bigblue {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 20px;
+	font-weight: bold;
+	line-height: normal;
+	color: #00f;
+	text-decoration: underline;
+}
+
+
+
+
+/* ******************************
+/* stamp pricing table
+/* *************************** */
+.stampPricing {
+	border: 1px solid #78bdf1;
+	border-right: 0;
+}
+.stampPricing th {
+	background-color: #dceeff;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 15px;
+	text-align: center;
+	height: 30px;
+	border-right: 1px solid #78bdf1;
+	border-bottom: 1px solid #78bdf1;
+}
+.stampPricing td {
+	height: 26px;
+	padding: 0 4px;
+	border-right: 1px solid #78bdf1;
+	border-bottom: 1px solid #ddd;
+}
+
+
+
+/*** inline box ***/
+.inlineBoxGreen {
+	background-color: #dfffbd;
+	border-left: 5px solid #88c331;
+	padding: 20px 20px 20px 15px;
+}
+
+/* expense message on update invoice */
+#expense_message {
+	display: none;
+}
+
+/* yellow message */
+.messageBox {
+	background-color: #ff9;
+	margin: 15px auto;
+	margin-top: 20px;
+	padding: 10px;
+	text-align: center;
+}
+
+
+/* progress wizard (import/export/basecamp) */
+#progress {
+	text-align: center;
+	padding-top: 20px;
+}
+#progress div {
+	float: left;
+	height: 45px;
+	margin: 0 1px;
+	color: #777;
+	text-align: center;
+}
+#progress a {
+	border-bottom: 8px solid #ddd;
+	display: block;
+	padding: 0;
+	height: 45px;
+	color: #777;
+	text-decoration: none;
+}
+#progress a:hover {
+	background-color: transparent;
+	border-color: #72b80b;
+}
+#progress a:hover span {
+	color: #408e00;
+}
+#progress div div {
+	border-bottom: 8px solid #ddd;
+	margin: 0;
+	width: 100%;
+}
+#progress div span {
+	color: #000;
+	font-weight: bold;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	display: block;
+}
+#progress div.end.left {
+	background-image: url(/images/2ndSite/progress-left.gif);
+}
+#progress div.end.right {
+	background-image: url(/images/2ndSite/progress-right.gif);
+}
+#progress div.end {
+	height: 53px;
+	width: 15px;
+	border-bottom: 0;
+	background-position: bottom;
+	background-repeat: no-repeat;
+}
+#progress div div.progress_on, #progress a.progress_on {
+	border-color: #72b80b;
+}
+#progress div.progress_importclient {
+	width: 238px;
+}
+#progress div.progress_importbc {
+	width: 178px;
+}
+
+
+/* import clients on import/export page */
+.imported_box {
+	background-color: #eee;
+	border: 1px solid #ccc;
+	font-size: 11px;
+	padding: 5px 10px;
+	float: left;
+	width: 325px;
+	margin: 5px 10px;
+}
+
+
+/* generate invoice page */
+.generate_type_box {
+	background-color: #eee;
+	border: 1px solid #bbb;
+	width: 185px;
+	padding: 8px;
+	float: left;
+	margin-right: 10px;
+}
+.generate_type_selected {
+	background-color: #d9ffb2;
+	border: 1px solid #88c331;
+}
+.generate_type_box span {
+	font-size: 11px;
+	line-height: 15px;
+}
+.generate_type_selected span {
+	color: #45690c;
+}
+.generate_type_box > input {
+	vertical-align: top;
+}
+#generate_desc {
+
+}
+#generate_desc div {
+	width: 145px;
+	padding-bottom: 4px;
+	float: left;
+}
+#generate_desc input {
+	margin-right: 3px;
+}
+#generate_sample_desc {
+	background-image: url(/images/2ndSite/generateinv-sample-desc.gif);
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	width: 334px;
+	height: 92px;
+	float: right;
+}
+#generate_sample_title {
+	font-weight: bold;
+	text-align: center;
+	padding: 9px;
+}
+#generate_sample_desc span {
+	display: none;
+}
+#project_list .project_list_box {
+	float: left;
+	width: 200px;
+	margin: 0 10px 15px 0;
+	padding: 2px;
+}
+#project_list div div {
+	float: right;
+	width: 175px;
+}
+#project_list div input {
+	float: left;
+
+}
+#project_list div > input {
+	margin-top: 3px;
+}
+
+.newTable.generateinv_table td {
+	padding: 10px 0;
+}
+
+
+.lowercase {
+	text-transform: lowercase;
+}
+
+
+.col_left_main{
+	float: left;
+	width: 530px;
+	padding-right: 30px;
+}
+.col_right_main {
+	float: right;
+	width: 200px;
+}
+
+
+/* update expense page */
+.expense_tax_label {
+	text-align: right;
+	float: left;
+	width: 175px;
+}
+.expense_amount_totals {
+	float: left;
+	margin-left: 25px;
+	text-align: right;
+	width: 230px;
+	border-left: 1px solid #ccc;
+}
+.expense_amount_totals strong {
+	width: 135px;
+	display: block;
+	float: left;
+	text-align: right;
+	padding-right: 7px;
+}
+
+.this_is_new {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	font-weight: bold;
+	line-height: normal;
+	background-color: #e26900;
+	color: #fff;
+	padding: 0 1px;
+	vertical-align: top;
+}
+
+
+
+/* version page */
+.versions_date {
+	font-family: Verdana, Tahoma, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+}
+
+
+
+/* template preferences */
+.invtemplate_box {
+    background-color: #eee;
+    border: 1px solid #bbb;
+    width: 165px;
+    padding: 7px;
+    float: left;
+    margin-right: 10px;
+}
+.invtemplate_box_selected {
+    background-color: #d9ffb2;
+    border: 1px solid #88c331;
+}
+.invtemplate_box img {
+	border: 1px solid #ccc;
+	margin: 10px 0;
+}
+.invtemplate_box span {
+    font-size: 11px;
+    line-height: 15px;
+}
+.invtemplate_box_selected span {
+    color: #45690c;
+}
+
+
+/* account info page */
+.update_card_box {
+	background-color: #ddd;
+	text-align: center;
+	padding: 8px;
+	margin: 8px 0 15px;
+}
+
+
+/* connect systems/received invoices thickbox */
+#connect_systems_prompt {
+	padding-top: 5px;
+	text-align: center;
+}
+
+/* report card bar */
+.bar {
+	background-color: #FFF;
+	background-image: url(/images/2ndSite/bar-bg.gif);
+	background-repeat: repeat-x;
+	width: 155px;
+	float: left;
+	margin-right: 3px;
+	border: 1px solid #bbb;
+}
+
+
