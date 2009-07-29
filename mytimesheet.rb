@@ -3,10 +3,18 @@ require "erb"
 require 'yaml'
 
 # FIXME: make cache an option as well as env var
-USECACHE = (ENV['USECACHE'].nil? or ENV['USECACHE'] == 0) ? false : true
-SAVECACHE = (ENV['SAVECACHE'].nil? or ENV['SAVECACHE'] == 0) ? false : true
+USECACHE = (ENV['USECACHE'].nil? or ENV['USECACHE'] == '0') ? false : true
+SAVECACHE = ((ENV['SAVECACHE'].nil? or ENV['SAVECACHE'] == '0' and 
+             (ENV['UPDATECACHE'].nil? or ENV['UPDATECACHE'] == '0')) ? false : true
 CACHEFILE="last_timesheet.yml"
 DISPLAYTYPE = :text
+
+def save_cache(tsdata)
+  rdata = render_timesheet(tsdata, :yaml)
+  out = File.new(CACHEFILE, "w+")
+  out.puts rdata
+  true
+end
 
 def render_timesheet(tsdata, type=:yaml)
   if type == :yaml
@@ -118,7 +126,7 @@ else
 end
 
 if SAVECACHE
-    save_timesheet(tsdata, CACHEFILE, :yaml)
+  save_cache(tsdata)
 end
 #generate template
 
