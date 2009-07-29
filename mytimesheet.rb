@@ -12,13 +12,13 @@ def render_timesheet(tsdata, type=:yaml)
   if type == :yaml
     rdata = tsdata.to_yaml
   elsif type == :text
-    tmplfile = "timesheet_tmpl.rtxt"
+    tmplfile = "templates/timesheet_tmpl.rtxt"
     template = File.open(tmplfile)
     #template = File.open(tmplfile).read.gsub(/^\s+/, '')
     message = ERB.new(template, 0, "%<>")
     rdata = message.result
   elsif type == :html
-    tmplfile = "timesheet_tmpl.rhtml"
+    tmplfile = "templates/timesheet_tmpl.rhtml"
     template = File.open(tmplfile)
     message = ERB.new(template, 0, "%<>")
     rdata = message.result
