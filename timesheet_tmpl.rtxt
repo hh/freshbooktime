@@ -1,15 +1,21 @@
 Timesheet for <% tsdata[:name] %>
 <%= tsdata[:timesheet_title] %>
 <% tsdata[:weeksheets].each do |range,timesheet| %>
-<% week_start = range[0] %><% week_end = range[1] %><% weekly_total = timesheet[:weekly_total] %>
+  <% week_start = range[0] %><% week_end = range[1] %><% weekly_total = timesheet[:weekly_total] %>
 
-  <%= week_start %> - <%= week_end %> Start!
-<% timesheet[:weekly_timesheet].each do |date,entries| %>
-<% entries.each do |hours,project,note| %>
-  <%= [date,hours,project,note].inspect %>
-<% end %>
-<% end %>
-  <%= week_start %> - <%= week_end %> Total: <%= weekly_total %>
+    Week <%= week_start %> - <%= week_end %>
+  <% timesheet[:weekly_timesheet].each do |date,entries| %>
+    <% dateshown = false %>
+    <% entries.each do |hours,project,note| %>
+      <% if dateshown %>
+        <%= [project,note,hours].inspect %>
+      <% else %>
+      <%= [date,project,note,hours].inspect %>
+      <% dateshown = true %>
+      <% end %>
+    <% end %>
+  <% end %>
+    <%= week_start %> - <%= week_end %> Total: <%= weekly_total %>
 <% end %>
 
 Total:  <%= tsdata[:totalhours] %>

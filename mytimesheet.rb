@@ -4,6 +4,8 @@ require 'yaml'
 
 # FIXME: make cache an option as well as env var
 USECACHE = (ENV['USECACHE'].nil? or ENV['USECACHE'] == 0) ? false : true
+SAVECACHE = (ENV['SAVECACHE'].nil? or ENV['SAVECACHE'] == 0) ? false : true
+CACHEFILE="last_timesheet.yml"
 DISPLAYTYPE = :text
 
 def render_timesheet(tsdata, type=:yaml)
@@ -71,7 +73,7 @@ puts "Working on timesheet for #{customer_name}:"
 
 if USECACHE
   puts "Loading from cache"
-  tsdata = YAML.load_file(File.join(File.dirname(__FILE__), "test-taylor_ts_data.yml"))
+  tsdata = YAML.load_file(File.join(File.dirname(__FILE__), CACHEFILE))
 else
   puts "Pulling data from web"
   total=0
@@ -83,12 +85,16 @@ else
   end
   tsdata={
       :name => myconfig[:name],
+      :mycompany => myconfig[:company],
+      :myphone => myconfig[:phone],
+      :myemail => myconfig[:email],
       :totalhours => total,
       :weeksheets => weeklist,
       :timesheet_title => tsconfig[:title],
-      :customer_html_logo => client_config[:html_logo]
+      :customer_html_logo => client_config[:catalis][:html_logo]
   }
 end
+
 
 if outfile.nil?
   display_timesheet(tsdata, DISPLAYTYPE)
@@ -112,5 +118,8 @@ else
   end
 end
 
+if SAVECACHE
+    save_timesheet(tsdata, CACHEFILE, :yaml)
+end
 #generate template
 
