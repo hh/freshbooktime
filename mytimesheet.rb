@@ -59,12 +59,11 @@ else
   outfile=nil
 end
 
-apiconfig = YAML.load_file(File.join(File.dirname(__FILE__), "conf/apiconfig.yml"))
 client_config = YAML.load_file(File.join(File.dirname(__FILE__), "conf/client_config.yml"))
 myconfig = YAML.load_file(File.join(File.dirname(__FILE__), "conf/myconfig.yml"))
 tsconfig = YAML.load_file(File.join(File.dirname(__FILE__), "conf/timesheet_config.yml"))
 
-t=FreshTime.new(apiconfig)
+t=FreshTime.new(:apihost => myconfig[:apihost], :apikey => myconfig[:apikey])
 
 customer_name = client_config[:catalis][:name]
 client_id     = client_config[:catalis][:client_id]
