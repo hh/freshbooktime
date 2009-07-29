@@ -2,20 +2,25 @@ require "freshtimesheet"
 require "erb"
 require 'yaml'
 
+# FIXME: make cache an option as well as env var
+USECACHE = (ENV['USECACHE'].nil? or ENV['USECACHE'] == 0) ? false : true
+DISPLAYTYPE = :text
+
 def render_timesheet(tsdata, type=:yaml)
   if type == :yaml
     rdata = tsdata.to_yaml
   elsif type == :text
     tmplfile = "timesheet_tmpl.rtxt"
     template = File.open(tmplfile)
+    #template = File.open(tmplfile).read.gsub(/^\s+/, '')
     message = ERB.new(template, 0, "%<>")
     rdata = message.result
   elsif type == :html
-    # tmplfile = "timesheet_tmpl.rhtml"
-    # template = File.open(tmplfile)
-    # message = ERB.new(template, 0, "%<>")
-    # rdata = message.result
-    rdata = "Render HTML and save NOT FINISHED"
+    tmplfile = "timesheet_tmpl.rhtml"
+    template = File.open(tmplfile)
+    message = ERB.new(template, 0, "%<>")
+    rdata = message.result
+    # rdata = "Render HTML and save NOT FINISHED"
   else
     # "Unknown type #{type}"
     rdata = nil
@@ -24,7 +29,9 @@ def render_timesheet(tsdata, type=:yaml)
 end
 
 def save_timesheet(data, filename, type=:yaml)
+  puts "Looking for #{filename}"
   return false if File.exist?(filename)
+  puts "Rendering data of type #{type}"
   rdata = render_timesheet(data, type)
   out = File.new(filename, "w+")
   out.puts rdata
@@ -53,33 +60,40 @@ end
 apiconfig = YAML.load_file(File.join(File.dirname(__FILE__), "apiconfig.yml"))
 client_config = YAML.load_file(File.join(File.dirname(__FILE__), "client_config.yml"))
 myconfig = YAML.load_file(File.join(File.dirname(__FILE__), "myconfig.yml"))
-timeperiods = YAML.load_file(File.join(File.dirname(__FILE__), "timeperiods.yml"))
+tsconfig = YAML.load_file(File.join(File.dirname(__FILE__), "timesheet_config.yml"))
 
 t=FreshTime.new(apiconfig)
 
 customer_name = client_config[:catalis][:name]
 client_id     = client_config[:catalis][:client_id]
 
-# puts "Working on timesheet for #{customer_name}:"
-# total=0
-# weeklist={}
-# timeperiods.each do |start,stop|
-#   ts=t.timesheet_for_client(client_id,start,stop)
-#   total+=ts[:weekly_total]
-#   weeklist[[start,stop]]=ts
-# end
-# tsdata={
-#     :name => myconfig[:name],
-#     :totalhours => total,
-#     :weeksheets => weeklist
-# }
+puts "Working on timesheet for #{customer_name}:"
 
-tsdata = YAML.load_file(File.join(File.dirname(__FILE__), "test-taylor_ts_data.yml"))
+if USECACHE
+  puts "Loading from cache"
+  tsdata = YAML.load_file(File.join(File.dirname(__FILE__), "test-taylor_ts_data.yml"))
+else
+  puts "Pulling data from web"
+  total=0
+  weeklist={}
+  tsconfig[:time_periods].each do |start,stop|
+    ts=t.timesheet_for_client(client_id,start,stop)
+    total+=ts[:weekly_total]
+    weeklist[[start,stop]]=ts
+  end
+  tsdata={
+      :name => myconfig[:name],
+      :totalhours => total,
+      :weeksheets => weeklist,
+      :timesheet_title => tsconfig[:title],
+      :customer_html_logo => client_config[:html_logo]
+  }
+end
 
 if outfile.nil?
-  display_timesheet(tsdata)
+  display_timesheet(tsdata, DISPLAYTYPE)
 else
-  ext = outfile.match(/\.(.*)$/)[0]
+  ext = outfile.match(/\.(.*)$/)[1]
   case ext
   when 'yml'
     type = :yaml
@@ -91,8 +105,10 @@ else
     type = nil
   end
 
-  if save_timesheet(data, outfile, type)
-    puts "Time sheet saved to #{fn}"
+  if save_timesheet(tsdata, outfile, type)
+    puts "Time sheet saved to #{outfile}"
+  else
+    puts "Could not save data to file! Does it already exist?"
   end
 end
 
