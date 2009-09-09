@@ -75,7 +75,9 @@
               &nbsp;&nbsp;&nbsp;&nbsp;<strong>Week <%= week_start %> - <%= week_end %></strong></td>
           </tr>
 
-          <% timesheet[:weekly_timesheet].each do |date,entries| %>
+          <%# timesheet[:weekly_timesheet].each do |date,entries| %>
+          <% timesheet[:weekly_timesheet].keys.sort.each do |date| %>
+            <% entries = timesheet[:weekly_timesheet][date] %>
             <% dateshown = false %>
 
             <% entries.each do |hours,project,note| %>
