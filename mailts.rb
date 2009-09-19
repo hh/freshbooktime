@@ -2,6 +2,7 @@
 
 require 'rubygems'
 require 'action_mailer'
+require 'inline_attachment'
 require 'mime/types'
 require 'yaml'
 require 'lib/smtp_tls'
@@ -26,11 +27,12 @@ class Mailer < ActionMailer::Base
       file = File.basename(apath)
       mime_type = MIME::Types.of(file).first
       content_type = mime_type ? mime_type.content_type : 'application/binary'
-      attachment (content_type) do |a|
-        a.body = File.read(apath)
-        a.filename = file
-        a.transfer_encoding = 'quoted-printable' if content_type =~ /^text\//
-      end
+      inline_attachment :content_type => content_type,
+        :body => File.read(apath),
+        :filename => file,
+        :cid => ""
+        #transfer_encoding => 'quoted-printable' if content_type =~ /^text\//
+      #end
     end
   end
   def candidate_for_layout?(x=nil)
