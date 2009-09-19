@@ -30,12 +30,17 @@ class Mailer < ActionMailer::Base
       #content_type = mime_type ? mime_type.content_type : 'application/binary'
       content_type = mime_type ? mime_type.content_type : 'plain/text'
       puts "ct: #{content_type}"
-      inline_attachment :content_type => content_type,
-        :body => File.read(apath),
-        :filename => file,
-        :cid => ""
-        #transfer_encoding => 'quoted-printable' if content_type =~ /^text\//
-      #end
+      unless content_type =~ /^image/
+        inline_attachment :content_type => content_type,
+          :body => File.read(apath),
+          :filename => file,
+          :cid => "",
+          :transfer_encoding => 'quoted-printable' if content_type =~ /^text\//
+      else
+        attachment :content_type => content_type,
+          :body => File.read(apath),
+          :filename => file
+      end
     end
   end
 end
