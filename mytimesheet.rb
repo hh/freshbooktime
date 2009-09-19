@@ -3,8 +3,10 @@ require "erb"
 require 'yaml'
 
 # FIXME: make cache an option as well as env var
+MYCONF = 'conf/chrisconfig.yml'
+#MYCONF = 'conf/myconfig.yml'
 USECACHE = (ENV['USECACHE'].nil? or ENV['USECACHE'] == '0') ? false : true
-SAVECACHE = ((ENV['SAVECACHE'].nil? or ENV['SAVECACHE'] == '0' and 
+SAVECACHE = ((ENV['SAVECACHE'].nil? or ENV['SAVECACHE'] == '0') and 
              (ENV['UPDATECACHE'].nil? or ENV['UPDATECACHE'] == '0')) ? false : true
 CACHEFILE="last_timesheet.yml"
 DISPLAYTYPE = :text
@@ -68,7 +70,8 @@ else
 end
 
 client_config = YAML.load_file(File.join(File.dirname(__FILE__), "conf/client_config.yml"))
-myconfig = YAML.load_file(File.join(File.dirname(__FILE__), "conf/myconfig.yml"))
+#myconfig = YAML.load_file(File.join(File.dirname(__FILE__), "conf/myconfig.yml"))
+myconfig = YAML.load_file(File.join(File.dirname(__FILE__), MYCONF))
 tsconfig = YAML.load_file(File.join(File.dirname(__FILE__), "conf/timesheet_config.yml"))
 
 t=FreshTime.new(:apihost => myconfig[:apihost], :apikey => myconfig[:apikey])
