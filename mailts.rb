@@ -9,23 +9,17 @@ require 'lib/smtp_tls'
 require 'lib/action_mailer_tls'
 require 'pp'
 
-MAILCONF = 'conf/mailconf.yml'
-#MAILCONF = 'conf/mailconf-chris.yml'
 TSCONF = 'conf/timesheet_config.yml'
 
-mc = YAML.load_file(MAILCONF)
-tsc = YAML.load_file(TSCONF)
-
-ActionMailer::Base.smtp_settings = mc[:smtp_settings]
-ActionMailer::Base.template_root = 'templates'
-
 class Mailer < ActionMailer::Base
-  def message (from_a, to, sub, b, *att)
+  def message (from_a, to, cc, bcc, sub, b, *att)
     
     from from_a
     recipients to
     subject sub
     body b
+    cc cc
+    bcc bcc
 
     att.flatten!
 
@@ -46,8 +40,28 @@ class Mailer < ActionMailer::Base
   end
 end
 
-body = mc[:body] || tsc[:title]
+#MAILCONF = 'conf/mailconf.yml'
+#MAILCONF = 'conf/mailconf-chris.yml'
+
+unless File.exist?(ARGV[0])
+  puts "Usage: mailts.rb <conf> [attachment1 .. attN]"
+  exit 1
+end
+
+mailconf = ARGV[0]
+ARGV.shift
+
+mc = YAML.load_file(mailconf)
+tsc = YAML.load_file(TSCONF)
+
+ActionMailer::Base.smtp_settings = mc[:smtp_settings]
+ActionMailer::Base.template_root = 'templates'
+
+#body = mc[:body] || tsc[:title]
+body = mc[:body] || ""
+cc = mc[:cc]
+bcc = mc[:bcc]
 subject = "#{mc[:subject]} #{tsc[:title]}"
-Mailer.deliver_message(mc[:from], mc[:to], subject, body, ARGV)
+Mailer.deliver_message(mc[:from], mc[:to], cc, bcc, subject, body, ARGV)
 
 

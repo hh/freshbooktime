@@ -7,3 +7,9 @@
   :authentication: :plain
   :user_name: user
   :password: secret
+:from: Some One <person@email.com>
+:to: Friend <pal@email.com>
+:cc:
+:bcc: Secret <keeper@hidden.com>
+:subject: TEST subject
+:body: 
