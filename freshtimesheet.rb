@@ -17,8 +17,8 @@ class FreshTime
                                       ['project_id',p.project_id],
                                      ]).each do |e|
           weeklyhours += e.hours
-          if not ts[e.date]:
-              ts[e.date] = [[e.hours,p.name,e.notes],]
+          if not ts[e.date]
+              ts[e.date] = [[e.hours,p.name,e.notes]]
           else
               ts[e.date] << [e.hours,p.name,e.notes]
           end
