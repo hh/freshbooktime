@@ -7,11 +7,12 @@ require 'yaml'
 require 'lib/smtp_tls'
 require 'lib/action_mailer_tls'
 
-mc = YAML.load_file("mailconf.yml")
+MAILCONF = 'conf/mailconf.yml'
+#MAILCONF = 'conf/mailconf-chris.yml'
+mc = YAML.load_file(MAILCONF)
 
 ActionMailer::Base.smtp_settings = mc[:smtp_settings]
 ActionMailer::Base.template_root = 'templates'
-#  { :address  =>  '10.209.3.26', :domain => '3dlabs.com'}
 
 class Mailer < ActionMailer::Base
   def message (from_a, to, sub, b, apath=nil)
