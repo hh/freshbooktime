@@ -1,0 +1,13 @@
+
+mytimesheet.rb
+  create a timesheet based on config
+
+mailts.rb
+
+Send an email message and attachment
+
+mailts.rb Gem prereqs
+  * actionmailer (gem install actionmailer)
+  * inline_attachment
+    * http://github.com/JasonKing/inline_attachment
+    * gem install JasonKing-inline_attachment

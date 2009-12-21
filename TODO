@@ -1,4 +1,6 @@
-Ability to send generated timesheet via email
+./ Ability to send generated timesheet via email
 Optparse code
 Refactor CSS use
 Image stuff?
+
+Take password for mail from stdin (prompt) or setup a outbound account...

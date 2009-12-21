@@ -48,7 +48,7 @@ end
 #MAILCONF = 'conf/mailconf.yml'
 #MAILCONF = 'conf/mailconf-chris.yml'
 
-unless File.exist?(ARGV[0])
+unless ARGV.length > 0 and File.exist?(ARGV[0])
   puts "Usage: mailts.rb <conf> [attachment1 .. attN]"
   exit 1
 end
@@ -68,5 +68,3 @@ cc = mc[:cc]
 bcc = mc[:bcc]
 subject = "#{mc[:subject]} #{tsc[:title]}"
 Mailer.deliver_message(mc[:from], mc[:to], cc, bcc, subject, body, ARGV)
-
-
