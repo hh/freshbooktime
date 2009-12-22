@@ -12,6 +12,8 @@ mailts.rb Gem prereqs
     * http://github.com/JasonKing/inline_attachment
     * gem install JasonKing-inline_attachment
 
+We should do this stuff soon.
+
 COMMAND USAGE
   myt <command> [options]
   myt export --fmt
