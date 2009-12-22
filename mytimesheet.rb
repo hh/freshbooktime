@@ -39,8 +39,6 @@ class MyTimeSheet
     end
   end
 
-  #protected
-
   def update_cache
     @cache = OpenStruct.new
     @cache.clients = { }
@@ -62,7 +60,12 @@ class MyTimeSheet
     end
     puts @cache.to_yaml
   end
-
+  def push
+    nil
+  end
+  def pull
+    nil
+  end
   def parsed_options?
     o = OptionParser.new
     script_name = File.basename($0)
@@ -89,28 +92,20 @@ class MyTimeSheet
     o.on('--display-type=[TYPE]',   :OPTIONAL,
          "Display-Type (text,yaml,html)"
          ) do |x| @opt.displaytype   = case x
-                                      when 'text'; :text
-                                      when 'html'; :html
-                                      when 'yaml'; :yaml
-                                      else nil
-                                      end
+                                       when 'text'; :text
+                                       when 'html'; :html
+                                       when 'yaml'; :yaml
+                                       else nil
+                                       end
     end
-    o.on('--cache-file', String ) { |x| @opt.cachefile = x }
+    #o.on('--cache-file', String ) { |x| @opt.cachefile = x }
     o.on('--use-cache')  { @opt.usecache  = 1 }
     o.on('--save-cache') { @opt.savecache = 1 }
-    o.on('-v',  '--verbose')     { @opt.verbose   = 1 }
+    o.on_tail('-v',  '--verbose')     { @opt.verbose   = 1 }
     o.on_tail("-h", "--help", "Show this help message.") { puts o; exit }
     o.parse!(ARGV) #rescue return false
     @optparser = o
     true
-  end
-
-  def process_options
-    @cfg = YAML.load_file(File.join(@opt.basedir, @opt.myconf))
-    @fb = FreshTime.new(:apihost => @cfg[:apihost],
-                         :apikey => @cfg[:apikey])
-    @opt.cachefile = "cache/"+[@cfg[:email],@opt.year,@opt.month,@opt.period].join("-") + ".yaml"
-    puts @cfg.to_yaml if @opt.verbose
   end
 
   def arguments_valid?
@@ -126,7 +121,21 @@ class MyTimeSheet
       puts Date::MONTHNAMES
       exit
     end
+    # verify that the cfg's exist?
+    #@cfg = YAML.load_file(File.join(@opt.basedir, @opt.myconf))
+    #@fb = FreshTime.new(:apihost => @cfg[:apihost],
+                         :apikey => @cfg[:apikey])
+    #@opt.cachefile = "cache/"+[@cfg[:email],@opt.year,@opt.month,@opt.period].join("-") + ".yaml"
   end
+
+  def process_options
+    @cfg = YAML.load_file(File.join(@opt.basedir, @opt.myconf))
+    @fb = FreshTime.new(:apihost => @cfg[:apihost],
+                         :apikey => @cfg[:apikey])
+    @opt.cachefile = "cache/"+[@cfg[:email],@opt.year,@opt.month,@opt.period].join("-") + ".yaml"
+    puts @cfg.to_yaml if @opt.verbose
+  end
+
 
   def pull_from_web
     # need to pull client_id from config or server( or server cache)
@@ -136,10 +145,6 @@ class MyTimeSheet
     day_start = period_list[0][0]
     day_end   = period_list[-1][1]
     @ts=@fb.timesheet_for_client(client_id,day_start,day_end)
-  end
-  def foo
-      nil
-  end
     puts ts.inspect if @opt.verbose
     total=0
     week_totals={}
@@ -163,7 +168,7 @@ class MyTimeSheet
       #ts=@fb.timesheet_for_client(client_id,start,stop)
       week_totals[[start,stop]]=weektotal
       total += weektotal
-  end
+    end
     ts # raw list
     total # total for period
     week_totals # dictionary of (weekstart,weekstop) = week_total_hours
@@ -190,6 +195,14 @@ class MyTimeSheet
   end
 
   def process_command
+    case @opt.command
+      when 'export'; export
+      when 'pull'; pull
+      when 'push'; push
+    end
+  end
+
+  def export
     # need to pull customer_name from config or server( or server cache)
     customer_name = "catalis" #client_config[:catalis][:name]
 
@@ -265,7 +278,6 @@ class MyTimeSheet
     puts render_timesheet(data, type)
   end
 
-
   def list_for_period
     if @opt.period == 1
       date_start = Date.new(@opt.year,@opt.month,1)
@@ -289,7 +301,7 @@ class MyTimeSheet
     outlist << [startweek,date_end]
     outlist
   end
-
 end
+
 
 MyTimeSheet.new.run

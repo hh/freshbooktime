@@ -1,6 +1,6 @@
 
 mytimesheet.rb
-  config a timesheet based on creation
+  create a timesheet based on config and data from freshbooks.com
 
 mailts.rb
 
