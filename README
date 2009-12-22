@@ -11,3 +11,14 @@ mailts.rb Gem prereqs
   * inline_attachment
     * http://github.com/JasonKing/inline_attachment
     * gem install JasonKing-inline_attachment
+
+USE
+  myt <command> [options]
+  myt export --fmt
+  myt email --usecache --mailconf
+  myt push 
+  myt pull
+
+  Common opts
+    --config
+    --save/--output
