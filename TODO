@@ -1,4 +1,3 @@
-* Merge with chris code - TAYLOR
 ** split render code into lib/freshbooktime/render.rb - TAYLOR
 ** cache into lib/freshbooktime/cache.rb - TAYLOR
 ** write minimal script to use cache lib and save cache - CHRIS
@@ -24,3 +23,5 @@
 =DONE=
 ./ Ability to send generated timesheet via email
 ./ Optparse code
+./ Merge with chris code - TAYLOR
+./ Integration with emacs git
