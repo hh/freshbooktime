@@ -18,9 +18,21 @@ COMMAND USAGE
   myt <command> [options]
   myt export --fmt
   myt email --usecache --mailconf
-  myt push 
+  myt push
   myt pull
 
   Common opts
     --config
     --save/--output
+
+DEVELOPMENT
+From: http://help.github.com/forking/
+
+git remote add taylor git://github.com/taylor/freshbooktime.git
+
+git fetch taylor
+git merge taylor/master
+
+#combines the above
+git pull taylor master
+
