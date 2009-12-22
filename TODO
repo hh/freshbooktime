@@ -1,6 +1,26 @@
-./ Ability to send generated timesheet via email
-Optparse code
-Refactor CSS use
-Image stuff?
+* Merge with chris code - TAYLOR
+** split render code into lib/freshbooktime/render.rb - TAYLOR
+** cache into lib/freshbooktime/cache.rb - TAYLOR
+** write minimal script to use cache lib and save cache - CHRIS
+*** Create code to allow pushing of cache back to freshbooks - CHRIS
+   * double double check that you really want to push. and overwrite!
+   * make sure it is overwriting the correct timeperiod....
+** refactor script to reference lib code... - TAYLOR
+** refactor script to use cache lib - CHRIS/TAYLOR
+** web and api into lib/freshbooktime/??? - CHRIS/TAYLOR
+** Change process_command to be a "save/display" method/command - TAYLOR
+** move save/display/render into appropriate libs - TAYLOR
+** Add <command> as first option for frontend script (See README)
+  * optparse to support command as first opt.  - CHRIS/TAYLOR
+  * export - TAYLOR
+  * email - TAYLOR
+  * pull - CHRIS
+  * push - CHRIS
+**** Merge mail code into main app - TAYLOR
+**** Take password for mail from stdin (prompt) or setup a outbound account...
+**** Refactor CSS use
+**** Image stuff?
 
-Take password for mail from stdin (prompt) or setup a outbound account...
+=DONE=
+./ Ability to send generated timesheet via email
+./ Optparse code
