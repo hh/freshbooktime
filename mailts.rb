@@ -13,7 +13,7 @@ TSCONF = 'conf/timesheet_config.yml'
 
 class Mailer < ActionMailer::Base
   def message (from_a, to, cc, bcc, sub, b, *att)
-    
+
     from from_a
     recipients to
     subject sub

@@ -4,6 +4,7 @@ require 'yaml'
 require 'optparse'
 require 'date'
 require 'ostruct'
+require 'freshbooks'
 
 class MyTimeSheet
   VERSION = "0.0.10"
@@ -11,23 +12,19 @@ class MyTimeSheet
   attr_accessor :opt, :cfg, :optparser, :tsdata, :cache, :cachefile
 
   def initialize
-    # Set defaults
-    @opt = OpenStruct.new
-    @opt.verbose = false
-    @opt.myconf = 'conf/myconfig.yml'
-    @opt.usecache = false
-    @opt.savecache = false
-    @opt.cachefile = 'last_timesheet.yml'
-    @opt.displaytype = :text
-    @opt.outfile = nil
-    @opt.basedir = File.dirname(__FILE__)
-    @opt.year = Date.today.year
-    @opt.month = Date.today.mon
-    @opt.period = case Date.today.day when 0..15 then 1 else 2 end
+    nil
+  end
+
+  def push
+    nil
+  end
+
+  def pull
+    nil
   end
 
   def run
-    if parsed_options? && arguments_valid?
+    if parse_options
       puts "Start at #{DateTime.now}\n\n" if @opt.verbose
       puts @opt.to_yaml if @opt.verbose # [Optional]
       process_options
@@ -38,8 +35,7 @@ class MyTimeSheet
     end
   end
 
-  def update_cache
-    @cache = OpenStruct.new
+  def update_id_cache
     @cache.clients = { }
     @cache.projects = { }
     @cache.tasks = { }
@@ -60,37 +56,32 @@ class MyTimeSheet
     puts @cache.to_yaml
   end
 
-  def push
-    nil
-  end
-
-  def pull
-    nil
-  end
-
-  def parsed_options?
+  def parse_options
+    # Set defaults
+    @opt = OpenStruct.new
+    @opt.verbose = false
+    @opt.usecache = false
+    @opt.savecache = false
+    @opt.myconf = 'conf/myconfig.yml'
+    @opt.displaytype = :text
+    @opt.outfile = nil
+    @opt.basedir = File.dirname(__FILE__)
+    @opt.year = Date.today.year
+    @opt.month = Date.today.mon
+    @opt.period = case Date.today.day when 0..15 then 1 else 2 end
     o = OptionParser.new
     script_name = File.basename($0)
     o.set_summary_indent('   ')
-    o.banner = "Usage: #{script_name} [OPTIONS]"
-    o.define_head 'Pull current period timesheet'
-    o.separator   ''
-    o.separator "Eventually pull and push, but for now just futzing"
-    o.on('--outfile=[OUTFILE]', :OPTIONAL,
-         "Outfile"
-         ) { |x| @opt.outfile = x }
-    o.on('--year=[YEAR]',    :OPTIONAL,
-         "Year"
-         ) { |x| @opt.year    = x.to_i  }
-    o.on('--period=[ONEORTWO]',  :OPTIONAL,
-         "Period (1 or 2)"
-         ) { |x| @opt.period  = x.to_i  }
-    o.on('--month=[MONTH]',   :OPTIONAL,
-         "Month"
-         ) { |x| @opt.month   = x }
-    o.on('--config=[CONFIG]',   :OPTIONAL,
-         "Config File"
-         ) { |x| @opt.myconf   = x }
+    o.banner = "Usage: #{script_name} COMMAND [OPTIONS]"
+    o.define_head 'for CodeCafe'
+    o.separator   'COMMAND is one of: push, pull, mail'
+    o.separator "OPTIONS are as follows:"
+    o.on('--outfile=[OUTFILE]') { |x| @opt.outfile = x }
+    o.on('--year=[YEAR]'      ) { |x| @opt.year    = x.to_i  }
+    o.on('--period=[ONEORTWO]',
+         "Period (1 or 2)"    ) { |x| @opt.period  = x.to_i  }
+    o.on('--month=[MONTH]'    ) { |x| @opt.month   = x }
+    o.on('--config=[CONFIG]'  ) { |x| @opt.myconf   = x }
     o.on('--display-type=[TYPE]',   :OPTIONAL,
          "Display-Type (text,yaml,html)"
          ) do |x| @opt.displaytype   = case x
@@ -107,13 +98,21 @@ class MyTimeSheet
     o.on_tail("-h", "--help", "Show this help message.") { puts o; exit }
     o.parse!(ARGV) #rescue return false
     @optparser = o
-    true
-  end
 
-  def arguments_valid?
-    # client_config hardcoded for now
-    # @o.client_config = YAML.load_file(
-    #   File.join(basedir,"conf/client_config.yml"))
+    # Command
+    if ARGV.length != 1
+      puts "At least one and only one COMMAND allowed"
+      return nil
+    end
+    @opt.command = case ARGV[0]
+                   when 'push'; :push
+                   when 'pull'; :pull
+                   when 'mail'; :mail
+                   else
+                     puts "COMMAND not valid."
+                     return nil
+                   end
+    # Month
     if Date::MONTHNAMES.include? @opt.month
       @opt.month = Date::MONTHNAMES.index(@opt.month)
     elsif [1,2,3,4,5,6,7,8,9,10,11,12].member? @opt.month
@@ -121,28 +120,32 @@ class MyTimeSheet
     else
       puts "Month must be one of:"
       puts Date::MONTHNAMES
-      exit
+      return nil
     end
-    # verify that the cfg's exist?
-    #@cfg = YAML.load_file(File.join(@opt.basedir, @opt.myconf))
-    #@fb = FreshTime.new(:apihost => @cfg[:apihost],
-    #                     :apikey => @cfg[:apikey])
-    #@opt.cachefile = "cache/"+[@cfg[:email],@opt.year,@opt.month,@opt.period].join("-") + ".yaml"
+    true
   end
 
   def process_options
     @cfg = YAML.load_file(File.join(@opt.basedir, @opt.myconf))
+    puts @cfg.to_yaml if @opt.verbose
+
+    if not @cfg[:apihost] && @cfg[:apikey]
+      puts "CONFIG missing :apikey or :apihost"
+      exit
+    end
+
     FreshBooks.setup(@cfg[:apihost],
                      @cfg[:apikey])
-    @opt.cachefile = "cache/"+[@cfg[:email],@opt.year,@opt.month,@opt.period].join("-") + ".yaml"
-    @opt.cachefile = "cache/"+ cfg[:apikey] + ".yaml"
-    puts @cfg.to_yaml if @opt.verbose
+
+    @opt.cachefile = "cache/" + cfg[:apikey] + ".yaml"
+
     if File.exists?(@opt.cachefile)
       @cache = YAML.load_file(@opt.cachefile)
     else
       @cache = OpenStruct.new
       @cache.timesheets =  { }
     end
+
   end
 
   def timesheet_for_client(client_id,from_date,to_date)
