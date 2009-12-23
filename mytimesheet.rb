@@ -1,5 +1,4 @@
 #!/usr/bin/env ruby
-require "freshtimesheet"
 require "erb"
 require 'yaml'
 require 'optparse'
@@ -9,7 +8,7 @@ require 'ostruct'
 class MyTimeSheet
   VERSION = "0.0.10"
 
-  attr_accessor :opt, :cfg, :optparser, :tsdata
+  attr_accessor :opt, :cfg, :optparser, :tsdata, :cache, :cachefile
 
   def initialize
     # Set defaults
@@ -60,12 +59,15 @@ class MyTimeSheet
     end
     puts @cache.to_yaml
   end
+
   def push
     nil
   end
+
   def pull
     nil
   end
+
   def parsed_options?
     o = OptionParser.new
     script_name = File.basename($0)
@@ -124,16 +126,72 @@ class MyTimeSheet
     # verify that the cfg's exist?
     #@cfg = YAML.load_file(File.join(@opt.basedir, @opt.myconf))
     #@fb = FreshTime.new(:apihost => @cfg[:apihost],
-                         :apikey => @cfg[:apikey])
+    #                     :apikey => @cfg[:apikey])
     #@opt.cachefile = "cache/"+[@cfg[:email],@opt.year,@opt.month,@opt.period].join("-") + ".yaml"
   end
 
   def process_options
     @cfg = YAML.load_file(File.join(@opt.basedir, @opt.myconf))
-    @fb = FreshTime.new(:apihost => @cfg[:apihost],
-                         :apikey => @cfg[:apikey])
+    FreshBooks.setup(@cfg[:apihost],
+                     @cfg[:apikey])
     @opt.cachefile = "cache/"+[@cfg[:email],@opt.year,@opt.month,@opt.period].join("-") + ".yaml"
+    @opt.cachefile = "cache/"+ cfg[:apikey] + ".yaml"
     puts @cfg.to_yaml if @opt.verbose
+    if File.exists?(@opt.cachefile)
+      @cache = YAML.load_file(@opt.cachefile)
+    else
+      @cache = OpenStruct.new
+      @cache.timesheets =  { }
+    end
+  end
+
+  def timesheet_for_client(client_id,from_date,to_date)
+    populate_id_cache if @cache.clients.nil?
+    if @cache.timesheets.contains? [client_id,from_date,to_date]
+      return @cache.timesheets[[client_id,from_date,to_date]]
+    end
+    weeklyhours=0
+    ts={}
+    @cache.projects[client_id].each_key do |pid|
+      @cache.projects[pid].each do |tid|
+        FreshBooks::Time_Entry.list([
+                                      ['date_from', from_date],
+                                      ['date_to', to_date],
+                                      ['task_id',tid],
+                                      ['project_id',pid],
+                                     ]).each do |e|
+          if not ts[e.date]
+              ts[e.date] = [[e.hours,p.name,e.notes]]
+          else
+              ts[e.date] << [e.hours,p.name,e.notes]
+          end
+        end
+      end
+    end
+    @cache.timesheets[[client_id,from_date,to_date]]=ts
+    save_cache
+    return ts
+  end
+
+  def populate_id_cache
+    @cache.clients = { }
+    @cache.projects = { }
+    @cache.tasks = { }
+    FreshBooks::Client.list.each do |c|
+      @cache.clients[c.client_id] = c.organization
+      puts "#{c.client_id} : #{c.organization}"
+      @cache.projects[c.client_id]= { }
+      FreshBooks::Project.list([['client_id', c.client_id],]).each do |p|
+        @cache.projects[c.client_id][p.project_id] = p.name
+        puts "  #{p.project_id} : #{p.name}"
+        @cache.tasks[c.project_id]= { }
+        FreshBooks::Task.list([['project_id', p.project_id],]).each do |t|
+          @cache.tasks[c.project_id][t.task_id] = t.name
+          puts "    #{t.task_id} : #{t.name}"
+        end
+      end
+    end
+    save_cache
   end
 
 
