@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 require "erb"
-require 'yaml'
-require 'optparse'
 require 'date'
+require 'yaml'
 require 'ostruct'
-require 'freshbooks'
+require 'optparse'
+require 'lib/freshbooktime/freshbooks'
 
 class MyTimeSheet
   VERSION = "0.0.10"
@@ -20,7 +20,8 @@ class MyTimeSheet
   end
 
   def pull
-    nil
+    puts @cache.to_yaml
+    update_id_cache
   end
 
   def run
@@ -33,27 +34,6 @@ class MyTimeSheet
     else
       puts @optparser
     end
-  end
-
-  def update_id_cache
-    @cache.clients = { }
-    @cache.projects = { }
-    @cache.tasks = { }
-    FreshBooks::Client.list.each do |c|
-      @cache.clients[c.client_id] = c.organization
-      puts "#{c.client_id} : #{c.organization}"
-      @cache.projects[c.client_id]= { }
-      FreshBooks::Project.list([['client_id', c.client_id],]).each do |p|
-        @cache.projects[c.client_id][p.project_id] = p.name
-        puts "  #{p.project_id} : #{p.name}"
-        @cache.tasks[c.project_id]= { }
-        FreshBooks::Task.list([['project_id', p.project_id],]).each do |t|
-          @cache.tasks[c.project_id][t.task_id] = t.name
-          puts "    #{t.task_id} : #{t.name}"
-        end
-      end
-    end
-    puts @cache.to_yaml
   end
 
   def parse_options
@@ -129,15 +109,16 @@ class MyTimeSheet
     @cfg = YAML.load_file(File.join(@opt.basedir, @opt.myconf))
     puts @cfg.to_yaml if @opt.verbose
 
-    if not @cfg[:apihost] && @cfg[:apikey]
+    if not @cfg['apihost'] && @cfg['apikey']
       puts "CONFIG missing :apikey or :apihost"
+      puts @cfg.to_yaml
       exit
     end
 
-    FreshBooks.setup(@cfg[:apihost],
-                     @cfg[:apikey])
+    FreshBooks.setup(@cfg['apihost'],
+                     @cfg['apikey'])
 
-    @opt.cachefile = "cache/" + cfg[:apikey] + ".yaml"
+    @opt.cachefile = "cache/" + @cfg['apikey'] + ".yaml"
 
     if File.exists?(@opt.cachefile)
       @cache = YAML.load_file(@opt.cachefile)
@@ -258,7 +239,7 @@ class MyTimeSheet
   def process_command
     case @opt.command
       when 'export'; export
-      when 'pull'; pull
+      when :pull; pull
       when 'push'; push
     end
   end
@@ -362,6 +343,29 @@ class MyTimeSheet
     outlist << [startweek,date_end]
     outlist
   end
+
+  def update_id_cache
+    @cache.clients = { }
+    @cache.projects = { }
+    @cache.tasks = { }
+    FreshBooks::Client.list.each do |c|
+      @cache.clients[c.client_id] = c.organization
+      puts "#{c.client_id} : #{c.organization}" if @opt.verbose
+      @cache.projects[c.client_id]= { }
+      FreshBooks::Project.list([['client_id', c.client_id],]).each do |p|
+        @cache.projects[c.client_id][p.project_id] = p.name
+        puts "  #{p.project_id} : #{p.name}" if @opt.verbose
+        @cache.tasks[p.project_id]= { }
+        FreshBooks::Task.list([['project_id', p.project_id],]).each do |t|
+          @cache.tasks[p.project_id][t.task_id] = t.name
+          puts "    #{t.task_id} : #{t.name}" if @opt.verbose
+        end
+      end
+    end
+    puts @cache.to_yaml
+  end
+
+
 end
 
 

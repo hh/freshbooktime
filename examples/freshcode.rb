@@ -1,6 +1,7 @@
-require 'freshbooks'
+require '../lib/freshbooktime/freshbooks'
 require 'yaml'
-$config = YAML.load_file(File.join(File.dirname(__FILE__), "config.yml"))
+$config = YAML.load_file(File.join(File.dirname(__FILE__),
+                                   "../conf/myconfig.yml"))
 
 
 
@@ -31,6 +32,7 @@ class FreshTime
     FreshBooks.setup($config['apihost'],$config['apikey'])
   end
   def projects_by_client
+    c=client_id
     FreshBooks::Client.list.each do |c|
       puts "#{c.client_id} : #{c.organization}"
       FreshBooks::Project.list([['client_id', c.client_id],]).each do |p|
@@ -61,9 +63,9 @@ class FreshTime
 end
 
 t=FreshTime.new
-puts "projects by client"
-t.projects_by_client
+#puts "projects by client"
+#t.projects_by_client
 
-puts "timesheet for client 13"
-t.timesheet_for_client
+#puts "timesheet for client 13"
+#t.timesheet_for_client
 
