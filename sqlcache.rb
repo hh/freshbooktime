@@ -8,7 +8,7 @@ ActiveRecord::Base.logger = Logger.new(STDERR)
 ActiveRecord::Base.colorize_logging = true # false
 ActiveRecord::Base.establish_connection(
                                         :adapter => "sqlite3",
-                                        :dbfile  => ":memory:"
+                                        :dbfile  => "./db" #:memory:"
                                         )
 
 ActiveRecord::Schema.define do
@@ -45,11 +45,36 @@ ActiveRecord::Schema.define do
   create_table :projects do |t|
     t.integer  "project_id"
     t.integer  "client_id"
+    t.integer  "client__id"
     t.string   "name"
     t.string   "bill_method"
     t.decimal  "rate"
     t.string   "description"
     t.integer  "tasks"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table :tasks do |t|
+    t.integer  "task_id"
+    t.integer  "project_id"
+    t.integer  "project__id"
+    t.string   "name"
+    t.boolean  "billable"
+    t.decimal  "rate"
+    t.string   "description"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table :time_entries do |t|
+    t.integer  "time_entry_id"
+    t.integer  "project_id"
+    t.integer  "task_id"
+    t.integer  "staff_id"
+    t.decimal  "hours"
+    t.string   "notes"
+    t.string   "date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -76,27 +101,6 @@ ActiveRecord::Schema.define do
     t.datetime "updated_at"
   end
 
-  create_table :tasks do |t|
-    t.integer  "task_id"
-    t.string   "name"
-    t.boolean  "billable"
-    t.decimal  "rate"
-    t.string   "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table :time_entries do |t|
-    t.integer  "time_entry_id"
-    t.integer  "project_id"
-    t.integer  "task_id"
-    t.integer  "staff_id"
-    t.decimal  "hours"
-    t.string   "notes"
-    t.string   "date"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
 end
 
@@ -106,20 +110,21 @@ end
 
 class Project < ActiveRecord::Base
   has_many :tasks
-  belongs_to :projects
+  belongs_to :client
 end
 
 class Task < ActiveRecord::Base
   belongs_to :project
+  has_many :time_entries
+end
+
+class TimeEntry < ActiveRecord::Base
+  belongs_to :task
 end
 
 class Staff < ActiveRecord::Base
 end
 
-class TimeEntry < ActiveRecord::Base
-  belongs_to :project
-  belongs_to :task
-end
 
 class FreshTimeCache
   attr_accessor :cache
@@ -129,7 +134,8 @@ class FreshTimeCache
 
   def cache_clients
     FreshBooks::Client.list.each do |c|
-      Client.create(:client_id => c.client_id,
+      c = Client.create(
+                    :client_id => c.client_id,
                     :first_name => c.first_name,
                     :last_name => c.last_name,
                     :organization => c.organization,
@@ -156,9 +162,10 @@ class FreshTimeCache
                     :url => c.url)
       FreshBooks::Project.list([['client_id', c.client_id],]).each do |p|
         # need to figure out how to link client_id to Client
-        Project.create(
+        p = Project.create(
+                       :client => c,
+                       :client__id => p.client_id,
                        :project_id => p.project_id,
-                       :client_id => p.client_id,
                        :name => p.name,
                        :bill_method => p.bill_method,
                        :rate => p.rate,
@@ -169,6 +176,7 @@ class FreshTimeCache
         FreshBooks::Task.list([['project_id', p.project_id],]).each do |t|
           # need to figure out how to link back to project
           Task.create(
+                      :project => p,
                       :task_id => t.task_id,
                       :name => t.name,
                       :billable => t.billable,
@@ -232,7 +240,9 @@ t=FreshTimeCache.new
 t.cache_clients
 t.cache_staff
 t.cache_time
-puts Client.all
-puts Project.all
-puts Task.all
-puts TimeEntry.all
+# puts Client.all.length
+# puts Project.all.length
+# puts Task.all.length
+# puts TimeEntry.all.length
+catalis = Client.all[3]
+puts "catilis project 0 task 0 task_id", catalis.projects[3].tasks[0].task_id
