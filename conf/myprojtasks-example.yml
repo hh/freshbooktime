@@ -1,0 +1,14 @@
+--- 
+clientname: 
+  Senior Development: 
+    :task: Senior Development
+    :sn: 
+    - d
+    - dev
+    - development
+  Misc Support: 
+    :task: Senior Support
+    :sn: 
+    - c
+    - cli
+    - clinic

@@ -1,0 +1,64 @@
+#!/usr/bin/env ruby
+
+require 'date'
+require 'yaml'
+
+script_path = Dir.chdir(File.expand_path(File.dirname(__FILE__))) { Dir.pwd }
+lib_path = Dir.chdir(script_path + '/../lib') { Dir.pwd }
+conf_path = Dir.chdir(script_path + '/../conf') { Dir.pwd }
+$:.unshift lib_path
+
+def die(*s)
+  puts s if s
+  exit 1
+end
+
+def usage
+  "#{__FILE__} <client> <project> <hours> [date]"
+end
+
+myprojtasks = YAML.load_file(conf_path + "/myprojtasks.yml") || die("can't find project/task config")
+
+if ARGV.include?("-h")
+  puts usage
+  exit
+end
+
+(client, proj, hours) = ARGV.shift(3)
+if client.nil? or proj.nil? or hours.nil?
+  die(usage)
+else
+  opt = { :client => client, :proj => proj, :hours => hours.to_i }
+end
+
+# could do a scan on the client key but we may have ambigous matches.
+if myprojtasks[opt[:client]].nil?
+  puts "client #{opt[:client]} not found"
+  exit
+end
+
+date = ARGV.empty? ? Date.today : ARGV.join(" ")
+
+t = {}
+found=false
+myprojtasks[client].each do |myproj, projinfo|
+  projinfo[:sn].each do |sn|
+    if sn == opt[:proj]
+      t[:proj] = myproj
+      t[:task] = projinfo[:task]
+      found=true
+      break 
+    end
+  end
+end
+
+if t.empty?
+  puts "Unknown project #{proj}"
+  exit
+end
+
+t[:hours] = opt[:hours]
+t[:date] = opt[:date]
+t[:notes] = "\n"
+
+puts [t].to_yaml
