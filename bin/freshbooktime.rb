@@ -1,10 +1,17 @@
 #!/usr/bin/env ruby
+script_path = Dir.chdir(File.expand_path(File.dirname(__FILE__))) { Dir.pwd }
+lib_path = Dir.chdir(script_path + '/../lib') { Dir.pwd }
+$:.unshift lib_path
+
 require "erb"
 require 'date'
 require 'yaml'
 require 'ostruct'
 require 'optparse'
-require 'lib/freshbooktime/freshbooks'
+require 'freshbooktime/freshbooks'
+
+CONF_PATH = Dir.chdir(script_path + '/../conf') { Dir.pwd }
+CACHE_DIR = Dir.chdir(script_path + '/../cache') { Dir.pwd }
 
 class MyTimeSheet
   VERSION = "0.0.10"
@@ -42,10 +49,9 @@ class MyTimeSheet
     @opt.verbose = false
     @opt.usecache = false
     @opt.savecache = false
-    @opt.myconf = 'conf/myconfig.yml'
+    @opt.myconf = CONF_PATH + 'myconfig.yml'
     @opt.displaytype = :text
     @opt.outfile = nil
-    @opt.basedir = File.dirname(__FILE__)
     @opt.year = Date.today.year
     @opt.month = Date.today.mon
     @opt.period = case Date.today.day when 0..15 then 1 else 2 end
@@ -106,7 +112,7 @@ class MyTimeSheet
   end
 
   def process_options
-    @cfg = YAML.load_file(File.join(@opt.basedir, @opt.myconf))
+    @cfg = YAML.load_file(@opt.myconf))
     puts @cfg.to_yaml if @opt.verbose
 
     if not @cfg['apihost'] && @cfg['apikey']
@@ -118,7 +124,7 @@ class MyTimeSheet
     FreshBooks.setup(@cfg['apihost'],
                      @cfg['apikey'])
 
-    @opt.cachefile = "cache/" + @cfg['apikey'] + ".yaml"
+    @opt.cachefile = CACHE_DIR + @cfg['apikey'] + ".yaml"
 
     if File.exists?(@opt.cachefile)
       @cache = YAML.load_file(@opt.cachefile)
@@ -252,7 +258,7 @@ class MyTimeSheet
 
     if @opt.usecache
       puts "Loading from cache"
-      tsdata = YAML.load_file(File.join(@opt.basedir, @opt.cachefile))
+      tsdata = YAML.load_file(@opt.cachefile)
     else
       tsdata = pull_from_web
       save_cache(tsdata) if @opt.savecache
@@ -367,6 +373,5 @@ class MyTimeSheet
 
 
 end
-
 
 MyTimeSheet.new.run
