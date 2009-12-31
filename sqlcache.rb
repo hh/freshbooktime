@@ -69,12 +69,12 @@ ActiveRecord::Schema.define do
 
   create_table :time_entries do |t|
     t.integer  "time_entry_id"
-    t.integer  "project_id"
-    t.integer  "task_id"
-    t.integer  "staff_id"
+    t.integer  "project__id"
+    t.integer  "task__id"
+    t.integer  "staff__id"
     t.decimal  "hours"
     t.string   "notes"
-    t.string   "date"
+    t.date     "date"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -161,7 +161,6 @@ class FreshTimeCache
                     :s_code => c.s_code,
                     :url => c.url)
       FreshBooks::Project.list([['client_id', c.client_id],]).each do |p|
-        # need to figure out how to link client_id to Client
         p = Project.create(
                        :client => c,
                        :client__id => p.client_id,
@@ -174,7 +173,6 @@ class FreshTimeCache
                        # :tasks => p.tasks
                        )
         FreshBooks::Task.list([['project_id', p.project_id],]).each do |t|
-          # need to figure out how to link back to project
           Task.create(
                       :project => p,
                       :task_id => t.task_id,
@@ -225,8 +223,9 @@ class FreshTimeCache
     timelist.each do |t|
       TimeEntry.create(
                        :time_entry_id => t.time_entry_id,
-                       :project_id => t.project_id,
-                       :task_id => t.task_id,
+                       :staff__id => t.staff_id,
+                       :project__id => t.project_id,
+                       :task__id => t.task_id,
                        :hours => t.hours,
                        :notes => t.notes,
                        :date => t.date
