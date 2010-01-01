@@ -4,7 +4,7 @@ require 'freshbooktime/models'
 class FreshTimeCache
   attr_accessor :cache
   def initialize(config)
-    FreshBooks.setup(config['apihost'],config['apikey'])
+    FreshBooks.setup(config[:apihost],config[:apikey])
   end
 
   def cache_clients

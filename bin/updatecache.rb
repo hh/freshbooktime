@@ -1,9 +1,11 @@
 #!/usr/bin/env ruby
 
-script_path = Dir.chdir(File.expand_path(File.dirname(__FILE__))) { Dir.pwd }
-lib_path = Dir.chdir(script_path + '/../lib') { Dir.pwd }
-conf_path = Dir.chdir(script_path + '/../conf') { Dir.pwd }
-CACHE_DIR = Dir.chdir(script_path + '/../cache') { Dir.pwd }
+APPNAME = File.basename(__FILE__)
+SCRIPT_PATH = Dir.chdir(File.expand_path(File.dirname(__FILE__))) { Dir.pwd }
+CONF_PATH = Dir.chdir(SCRIPT_PATH + '/../conf') { Dir.pwd }
+CACHE_DIR = Dir.chdir(SCRIPT_PATH + '/../cache') { Dir.pwd }
+lib_path = Dir.chdir(SCRIPT_PATH + '/../lib') { Dir.pwd }
+
 $:.unshift lib_path
 
 #require 'active_record'
@@ -13,17 +15,23 @@ require 'freshbooktime/models'
 require 'freshbooktime/cache'
 require 'yaml'
 
-$config = YAML.load_file(conf_path + "/myconfig.yml")
+$config = YAML.load_file(CONF_PATH + "/myconfig.yml")
+
+# FIXME: Don't delete unless you pass an option?
+puts "Removing existing db and creating new one"
+dbfile=CACHE_DIR+"/db"
+File.delete(dbfile) if File.exists?(dbfile)
 
 ActiveRecord::Base.logger = Logger.new(STDERR)
 ActiveRecord::Base.colorize_logging = true # false
-ActiveRecord::Base.establish_connection(
-                                        :adapter => "sqlite3",
-                                        :database  => CACHE_DIR + "/db" #:memory:"
-                                        )
+ActiveRecord::Base.establish_connection( :adapter => "sqlite3", :database  => dbfile)
+
 FreshTimeCacheSchema.create
 
+puts "Creating schema in #{dbfile}"
+
 t=FreshTimeCache.new($config)
+
 t.cache_clients
 t.cache_staff
 t.cache_time

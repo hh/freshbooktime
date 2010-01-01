@@ -608,7 +608,8 @@ module FreshBooks
   end
 
   Time_Entry = BaseObject.new(:time_entry_id, :project_id, :task_id,
-                              :hours, :staff_id,
+                              :hours,
+                              #:hours, :staff_id, # FIXME: fails for create entry
                               :notes, :date)
 
   class Time_Entry
