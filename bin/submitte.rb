@@ -8,6 +8,7 @@
 script_path = Dir.chdir(File.expand_path(File.dirname(__FILE__))) { Dir.pwd }
 lib_path = Dir.chdir(script_path + '/../lib') { Dir.pwd }
 conf_path = Dir.chdir(script_path + '/../conf') { Dir.pwd }
+CACHE_DIR = Dir.chdir(script_path + '/../cache') { Dir.pwd }
 $:.unshift lib_path
 
 APPNAME = File.basename(__FILE__)
@@ -38,7 +39,7 @@ ActiveRecord::Base.logger = Logger.new(nil)
 ActiveRecord::Base.colorize_logging = false
 ActiveRecord::Base.establish_connection(
                                         :adapter => "sqlite3",
-                                        :dbfile  => "./db" #:memory:"
+                                        :dbfile  => CACHE_DIR + "/db" #:memory:"
                                         )
 
 FreshBooks.setup($config['apihost'],$config['apikey'])
@@ -49,7 +50,7 @@ FreshBooks.setup($config['apihost'],$config['apikey'])
 # puts FreshBooks::Time_Entry.new( 0, 10, 7,
 #                             4,"Shorthand","2009-12-01").create
 
-YAML.load_file('ts.yaml').each do |e|
+YAML.load_file(tefile).each do |e|
   FreshBooks::Time_Entry.new(
                          time_entry_id=0,
                          project_id=Project.find_by_name(
