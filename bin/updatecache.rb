@@ -23,7 +23,7 @@ ActiveRecord::Base.establish_connection(
                                         )
 FreshTimeCacheSchema.create
 
-t=FreshTimeCache.new
+t=FreshTimeCache.new($config)
 t.cache_clients
 t.cache_staff
 t.cache_time
