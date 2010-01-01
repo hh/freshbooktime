@@ -2,11 +2,15 @@
 
 require 'date'
 require 'yaml'
+require 'rubygems'
+require 'chronic'
 
 script_path = Dir.chdir(File.expand_path(File.dirname(__FILE__))) { Dir.pwd }
 lib_path = Dir.chdir(script_path + '/../lib') { Dir.pwd }
 conf_path = Dir.chdir(script_path + '/../conf') { Dir.pwd }
 $:.unshift lib_path
+
+APPNAME = File.basename(__FILE__)
 
 def die(*s)
   puts s if s
@@ -14,7 +18,7 @@ def die(*s)
 end
 
 def usage
-  "#{__FILE__} <client> <project> <hours> [date]"
+  "#{APPNAME} <client> <project> <hours> [date]"
 end
 
 myprojtasks = YAML.load_file(conf_path + "/myprojtasks.yml") || die("can't find project/task config")
@@ -37,7 +41,7 @@ if myprojtasks[opt[:client]].nil?
   exit
 end
 
-date = ARGV.empty? ? Date.today : ARGV.join(" ")
+opt[:date] = ARGV.empty? ? Date.today : Date.parse(Chronic.parse(ARGV.join(" ")).to_s)
 
 t = {}
 found=false
