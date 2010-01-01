@@ -1,3 +1,4 @@
+require 'rubygems'
 require 'active_record'
 
 class Client < ActiveRecord::Base
@@ -15,6 +16,7 @@ class Task < ActiveRecord::Base
 end
 
 class TimeEntry < ActiveRecord::Base
+  belongs_to :project
   belongs_to :task
 end
 
