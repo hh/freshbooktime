@@ -1,5 +1,5 @@
 #FIXME: this should check to see if cache already exists
-require 'freshbooktime/schema'
+#require 'freshbooktime/schema'
 require 'freshbooktime/models'
 class FreshTimeCache
   attr_accessor :cache

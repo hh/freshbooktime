@@ -39,7 +39,7 @@ ActiveRecord::Base.logger = Logger.new(nil)
 ActiveRecord::Base.colorize_logging = false
 ActiveRecord::Base.establish_connection(
                                         :adapter => "sqlite3",
-                                        :dbfile  => CACHE_DIR + "/db" #:memory:"
+                                        :database  => CACHE_DIR + "/db" #:memory:"
                                         )
 
 FreshBooks.setup($config['apihost'],$config['apikey'])
