@@ -1,7 +1,10 @@
 #!/usr/bin/env ruby
 script_path = Dir.chdir(File.expand_path(File.dirname(__FILE__))) { Dir.pwd }
 lib_path = Dir.chdir(script_path + '/../lib') { Dir.pwd }
+conf_path = Dir.chdir(script_path + '/../conf') { Dir.pwd }
 $:.unshift lib_path
+CONF_PATH = conf_path
+CACHE_DIR = Dir.chdir(script_path + '/../cache/') { Dir.pwd }
 
 require "erb"
 require 'date'
@@ -9,9 +12,37 @@ require 'yaml'
 require 'ostruct'
 require 'optparse'
 require 'freshbooktime/freshbooks'
+require 'active_record'
 
-CONF_PATH = Dir.chdir(script_path + '/../conf') { Dir.pwd }
-CACHE_DIR = Dir.chdir(script_path + '/../cache') { Dir.pwd }
+
+ActiveRecord::Base.logger = Logger.new(STDERR)
+ActiveRecord::Base.colorize_logging = true # false
+ActiveRecord::Base.establish_connection(
+                                        :adapter => "sqlite3",
+                                        :dbfile  => "./db" #:memory:"
+                                        )
+class Client < ActiveRecord::Base
+  has_many :projects
+end
+
+class Project < ActiveRecord::Base
+  has_many :tasks
+  belongs_to :client
+end
+
+class Task < ActiveRecord::Base
+  belongs_to :project
+end
+
+class Staff < ActiveRecord::Base
+end
+
+class TimeEntry < ActiveRecord::Base
+  belongs_to :project
+  belongs_to :task
+end
+
+
 
 class MyTimeSheet
   VERSION = "0.0.10"
@@ -28,7 +59,6 @@ class MyTimeSheet
 
   def pull
     puts @cache.to_yaml
-    update_id_cache
   end
 
   def run
@@ -49,7 +79,7 @@ class MyTimeSheet
     @opt.verbose = false
     @opt.usecache = false
     @opt.savecache = false
-    @opt.myconf = CONF_PATH + 'myconfig.yml'
+    @opt.myconf = CONF_PATH + '/myconfig.yml'
     @opt.displaytype = :text
     @opt.outfile = nil
     @opt.year = Date.today.year
@@ -112,7 +142,7 @@ class MyTimeSheet
   end
 
   def process_options
-    @cfg = YAML.load_file(@opt.myconf))
+    @cfg = YAML.load_file(@opt.myconf)
     puts @cfg.to_yaml if @opt.verbose
 
     if not @cfg['apihost'] && @cfg['apikey']
@@ -188,7 +218,7 @@ class MyTimeSheet
   def pull_from_web
     # need to pull client_id from config or server( or server cache)
     client_id = 13 #client_config[:catalis][:client_id]
-    puts "Pulling data from web"
+    puts "Pulling data from sqlcache"
     period_list = list_for_period
     day_start = period_list[0][0]
     day_end   = period_list[-1][1]
@@ -256,14 +286,6 @@ class MyTimeSheet
 
     puts "Working on timesheet for #{customer_name}:"
 
-    if @opt.usecache
-      puts "Loading from cache"
-      tsdata = YAML.load_file(@opt.cachefile)
-    else
-      tsdata = pull_from_web
-      save_cache(tsdata) if @opt.savecache
-    end
-
     if @opt.outfile.nil?
       display_timesheet(tsdata, @opt.displaytype)
     else
@@ -281,13 +303,6 @@ class MyTimeSheet
       end
     end
     #generate template
-  end
-
-  def save_cache(tsdata)
-    rdata = render_timesheet(tsdata, :yaml)
-    out = File.new(@opt.cachefile, "w+")
-    out.puts rdata
-    true
   end
 
   def render_timesheet(tsdata, type=:yaml)
@@ -350,28 +365,7 @@ class MyTimeSheet
     outlist
   end
 
-  def update_id_cache
-    @cache.clients = { }
-    @cache.projects = { }
-    @cache.tasks = { }
-    FreshBooks::Client.list.each do |c|
-      @cache.clients[c.client_id] = c.organization
-      puts "#{c.client_id} : #{c.organization}" if @opt.verbose
-      @cache.projects[c.client_id]= { }
-      FreshBooks::Project.list([['client_id', c.client_id],]).each do |p|
-        @cache.projects[c.client_id][p.project_id] = p.name
-        puts "  #{p.project_id} : #{p.name}" if @opt.verbose
-        @cache.tasks[p.project_id]= { }
-        FreshBooks::Task.list([['project_id', p.project_id],]).each do |t|
-          @cache.tasks[p.project_id][t.task_id] = t.name
-          puts "    #{t.task_id} : #{t.name}" if @opt.verbose
-        end
-      end
-    end
-    puts @cache.to_yaml
-  end
-
-
 end
+
 
 MyTimeSheet.new.run
