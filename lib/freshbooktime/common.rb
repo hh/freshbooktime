@@ -17,5 +17,6 @@ end
 
 ActiveRecord::Base.logger = Logger.new(nil)
 ActiveRecord::Base.colorize_logging = false
-ActiveRecord::Base.establish_connection( :adapter => "sqlite3", :database  => CACHE_DIR + "/db" )
+ActiveRecord::Base.establish_connection( :adapter => "sqlite3",
+                                         :database  => CACHE_DIR + "/db" )
 true

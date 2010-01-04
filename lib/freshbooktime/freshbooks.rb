@@ -608,13 +608,13 @@ module FreshBooks
   end
 
   Time_Entry = BaseObject.new(:time_entry_id, :project_id, :task_id,
-                              :hours,
-                              #:hours, :staff_id, # FIXME: fails for create entry
+                              :hours, :staff_id,
                               :notes, :date)
 
   class Time_Entry
     TYPE_MAPPINGS = { 'time_entry_id' => Fixnum, 'project_id' => Fixnum,
       'task_id' => Fixnum, 'hours' => Float , 'staff_id' => Fixnum}
+    MUTABILITY = { :staff_id => :read_only }
 
     def create
       resp = FreshBooks::call_api('time_entry.create', 'time_entry' => self)

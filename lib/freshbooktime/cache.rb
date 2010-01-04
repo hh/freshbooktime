@@ -4,6 +4,7 @@ require 'freshbooktime/models'
 class FreshTimeCache
   attr_accessor :cache
   def initialize(config)
+    puts config.to_yaml
     FreshBooks.setup(config[:apihost],config[:apikey])
   end
 

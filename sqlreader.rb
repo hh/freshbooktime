@@ -1,14 +1,109 @@
+#!/usr/bin/env ruby
+require 'erb'
+require 'yaml'
+require 'ostruct'
+require 'optparse'
 require 'active_record'
 require 'lib/freshbooktime/freshbooks'
 require 'lib/freshbooktime/models'
-require 'yaml'
-require 'erb'
-require 'ostruct'
-require 'optparse'
 
-class X
-  attr_accessor :opt, :cfg, :optparser, :tsdata, :cache, :cachefile, :tsdata
+class CacheCommandLine
+  attr_accessor :opt
+
   def initialize
+    # Set defaults
+    @opt = {
+      :verbose => false,
+      :usecache => false,
+      :savecache => false,
+      :myconf => File.join(File.dirname(__FILE__),
+                          "./conf/myconfig.yml"),
+      :displaytype => :text,
+      :outfile => nil,
+      :username => '',
+      :year => Date.today.year,
+      :month => Date.today.mon,
+      :period => case Date.today.day when 0..15 then 1 else 2 end,
+    }
+    o = OptionParser.new
+    script_name = File.basename($0)
+    o.set_summary_indent('   ')
+    o.banner = "Usage: #{script_name} COMMAND [OPTIONS]"
+    o.define_head 'for CodeCafe'
+    o.separator   'COMMAND is one of: push, pull, mail'
+    o.separator "OPTIONS are as follows:"
+    o.on('--outfile=[OUTFILE]') { |x| @opt[:outfile] = x }
+    o.on('--year=[YEAR]'      ) { |x| @opt[:year]    = x.to_i  }
+    o.on('--period=[ONEORTWO]',
+         "Period (1 or 2)"    ) { |x| @opt[:period]  = x.to_i  }
+    o.on('--month=[MONTH]'    ) { |x| @opt[:month]   = x }
+    o.on('--config=[CONFIG]'  ) { |x| @opt[:myconf]   = x }
+    o.on('--username=USERNAME') { |x| @opt[:username] = x }
+    o.on('--display-type=[TYPE]',   :OPTIONAL,
+         "Display-Type (text,yaml,html)"
+         ) do |x| @opt[:displaytype]   = case x
+                                       when 'text'; :text
+                                       when 'html'; :html
+                                       when 'yaml'; :yaml
+                                       else nil
+                                       end
+    end
+    #o.on('--cache-file', String ) { |x| @opt[:cachefile = x }
+    o.on('--use-cache')  { @opt[:usecache]  = 1 }
+    o.on('--save-cache') { @opt[:savecache] = 1 }
+    o.on_tail('-v',  '--verbose')     { @opt[:verbose]   = 1 }
+    o.on_tail("-h", "--help", "Show this help message.") { puts o; exit }
+    o.parse!(ARGV) #rescue return false
+    @optparser = o
+
+    # Command
+    if ARGV.length != 1
+      puts "At least one and only one COMMAND allowed"
+      puts "The remaining arguments were: #{ARGV.inspect}"
+      return nil
+    end
+
+    @opt[:command] = case ARGV[0]
+                   when 'push'; :push
+                   when 'pull'; :pull
+                   when 'mail'; :mail
+                   else
+                     puts "COMMAND not valid."
+                     return nil
+                   end
+    # Month
+    if Date::MONTHNAMES.include? @opt[:month]
+      @opt[:month] = Date::MONTHNAMES.index(@opt[:month])
+    elsif [1,2,3,4,5,6,7,8,9,10,11,12].member? @opt[:month]
+      nil
+    else
+      puts "Month must be one of:"
+      puts Date::MONTHNAMES
+      return nil
+    end
+
+    #load config file
+    @opt.update(YAML.load_file(@opt[:myconf]))
+    puts @opt.to_yaml if @opt[:verbose]
+
+    if not @opt[:apihost] && @opt[:apikey]
+      puts "CONFIG missing :apikey or :apihost"
+      puts @opt.to_yaml
+      exit
+    end
+    puts @opt.to_yaml
+    return @opt
+  end
+
+end
+
+class Cache
+  attr_accessor :opt
+  def initialize
+    @opt=CacheCommandLine.new.opt
+    puts @opt.to_yaml
+    FreshBooks.setup(@opt[:apihost],
+                     @opt[:apikey])
     ActiveRecord::Base.logger = Logger.new(STDERR)
     ActiveRecord::Base.colorize_logging = true # false
     ActiveRecord::Base.establish_connection(
@@ -18,116 +113,15 @@ class X
   end
 
   def run
-    if parse_options
-      puts "Start at #{DateTime.now}\n\n" if @opt.verbose
-      puts @opt.to_yaml if @opt.verbose # [Optional]
-      process_options
-      pull_from_cache
-      tsdata_gen
-      puts @total
-      puts @week_totals.to_yaml
-      puts @week_sheets.to_yaml
-      puts @tsdata.to_yaml
-      puts "\nFinished at #{DateTime.now}" if @opt.verbose
-    else
-      puts @optparser
-    end
+    puts "Start at #{DateTime.now}\n\n" if @opt[:verbose]
+    tsdata_gen
+    puts @total
+    puts @week_totals.to_yaml
+    puts @week_sheets.to_yaml
+    puts @tsdata.to_yaml
+    puts "\nFinished at #{DateTime.now}" if @opt[:verbose]
   end
 
-  def parse_options
-    # Set defaults
-    @opt = OpenStruct.new
-    @opt.verbose = false
-    @opt.usecache = false
-    @opt.savecache = false
-    @opt.myconf = File.join(File.dirname(__FILE__),
-                            "./conf/myconfig.yml")
-    @opt.displaytype = :text
-    @opt.outfile = nil
-    @opt.username = ''
-    @opt.year = Date.today.year
-    @opt.month = Date.today.mon
-    @opt.period = case Date.today.day when 0..15 then 1 else 2 end
-    o = OptionParser.new
-    script_name = File.basename($0)
-    o.set_summary_indent('   ')
-    o.banner = "Usage: #{script_name} COMMAND [OPTIONS]"
-    o.define_head 'for CodeCafe'
-    o.separator   'COMMAND is one of: push, pull, mail'
-    o.separator "OPTIONS are as follows:"
-    o.on('--outfile=[OUTFILE]') { |x| @opt.outfile = x }
-    o.on('--year=[YEAR]'      ) { |x| @opt.year    = x.to_i  }
-    o.on('--period=[ONEORTWO]',
-         "Period (1 or 2)"    ) { |x| @opt.period  = x.to_i  }
-    o.on('--month=[MONTH]'    ) { |x| @opt.month   = x }
-    o.on('--config=[CONFIG]'  ) { |x| @opt.myconf   = x }
-    o.on('--username=USERNAME') { |x| @opt.username = x }
-    o.on('--display-type=[TYPE]',   :OPTIONAL,
-         "Display-Type (text,yaml,html)"
-         ) do |x| @opt.displaytype   = case x
-                                       when 'text'; :text
-                                       when 'html'; :html
-                                       when 'yaml'; :yaml
-                                       else nil
-                                       end
-    end
-    #o.on('--cache-file', String ) { |x| @opt.cachefile = x }
-    o.on('--use-cache')  { @opt.usecache  = 1 }
-    o.on('--save-cache') { @opt.savecache = 1 }
-    o.on_tail('-v',  '--verbose')     { @opt.verbose   = 1 }
-    o.on_tail("-h", "--help", "Show this help message.") { puts o; exit }
-    o.parse!(ARGV) #rescue return false
-    @optparser = o
-
-    # Command
-    if ARGV.length != 1
-      puts "At least one and only one COMMAND allowed"
-      return nil
-    end
-    @opt.command = case ARGV[0]
-                   when 'push'; :push
-                   when 'pull'; :pull
-                   when 'mail'; :mail
-                   else
-                     puts "COMMAND not valid."
-                     return nil
-                   end
-    # Month
-    if Date::MONTHNAMES.include? @opt.month
-      @opt.month = Date::MONTHNAMES.index(@opt.month)
-    elsif [1,2,3,4,5,6,7,8,9,10,11,12].member? @opt.month
-      nil
-    else
-      puts "Month must be one of:"
-      puts Date::MONTHNAMES
-      return nil
-    end
-    true
-  end
-
-  def process_options
-    @cfg = YAML.load_file(@opt.myconf)
-    puts @cfg.to_yaml if @opt.verbose
-
-    if not @cfg[:apihost] && @cfg[:apikey]
-      puts "CONFIG missing :apikey or :apihost"
-      puts @cfg.to_yaml
-      exit
-    end
-
-    FreshBooks.setup(@cfg[:apihost],
-                     @cfg[:apikey])
-
-    # @opt.cachefile = CACHE_DIR + @cfg['apikey'] + ".yaml"
-
-    # if File.exists?(@opt.cachefile)
-    #   @cache = YAML.load_file(@opt.cachefile)
-    # else
-    #   @cache = OpenStruct.new
-    #   @cache.timesheets =  { }
-    # end
-
-  end
 
   def list_for_period(type=:twice_monthly)
     case type
@@ -137,13 +131,15 @@ class X
     end
   end
 
-  #TODO: week ends on Sat/Sun?
   def list_for_twice_monthly
-    if @opt.period == 1
-      date_start = Date.new(@opt.year,@opt.month,1)
+    #TODO: week ends on Sat/Sun?
+
+    # set date_end and date_start for period
+    if @opt[:period] == 1
+      date_start = Date.new(@opt[:year],@opt[:month],1)
       date_end = date_start + 16 #FIXME: make end on option
-    elsif @opt.period == 2
-      date_start = Date.new(@opt.year,@opt.month,16)
+    elsif @opt[:period] == 2
+      date_start = Date.new(@opt[:year],@opt[:month],16)
       # adding 16 days gives us some day next month
       somedaynextmonth = date_start + 16
       nextmonthyear = somedaynextmonth.year
@@ -151,6 +147,8 @@ class X
       # now take the first day of next month and subtract one day
       date_end = Date.new(nextmonthyear,nextmonth,1)-1
     end
+
+    #create outlist of [[startweek1,endweek1][startweek2,endweek2]...]
     week1end = date_start + 6 - date_start.wday #saturday that week
     outlist = [[date_start,week1end],]
     startweek = nil
@@ -170,14 +168,18 @@ class X
     @total=0
     @week_totals={}
     @week_sheets={}
-    puts period_list.to_yaml if @opt.verbose
+    puts period_list.to_yaml if @opt[:verbose]
     period_list.each do |start,stop|
       weektotal=0
       start.upto(stop) { |thisday|
         # SOMETHING.get_user_time_entries_for_day('chris',thisday).eachn|
         # end
-        TimeEntry.find_all_by_staff__id_and_date(
-            Staff.find_by_username(@opt.username).staff_id,thisday).each do |e|
+        # TimeEntry.find_all_by_staff__id_and_date(
+        #     Staff.find_by_username(@opt[:username]
+        #                            ).staff_id,thisday).each do |e|
+        # there are issues with not having access to staff_id
+        # if you are not an admin
+        TimeEntry.find_all_by_date(thisday).each do |e|
           weektotal+=e.hours
           project = Project.find_by_project_id(e.project__id)
           if not @week_sheets[thisday]
@@ -206,14 +208,14 @@ class X
     tsname += [Date::MONTHNAMES[day_start.month]," ",
                day_start.day,', ',day_start.year].join("")
     tsname += " to "
-    tsname += [Date::MONTHNAMES[day_end.month]," ",
+-    tsname += [Date::MONTHNAMES[day_end.month]," ",
                day_end.day,', ',day_end.year].join("")
     weeklist = pull_from_cache
     @tsdata={
-      :name => @cfg[:name],
-      :mycompany => @cfg[:company],
-      :myphone => @cfg[:phone],
-      :myemail => @cfg[:email],
+      :name => @opt[:name],
+      :mycompany => @opt[:company],
+      :myphone => @opt[:phone],
+      :myemail => @opt[:email],
       :totalhours => @total,
       :weeksheets => @week_sheets,
       :timesheet_title => tsname,
@@ -229,5 +231,5 @@ end
 #                                      :date => Date::civil(2009,12,1) ..
 #                                      Date::civil(2009,12,31),}
 #                                    )
-x=X.new
+x=Cache.new
 x.run
