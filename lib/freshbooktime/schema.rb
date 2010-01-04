@@ -61,6 +61,9 @@ module FreshTimeCacheSchema
 
       create_table :time_entries do |t|
         t.integer  "time_entry_id"
+        t.integer  "project_id"
+        t.integer  "task_id"
+        t.integer  "staff_id"
         t.integer  "project__id"
         t.integer  "task__id"
         t.integer  "staff__id"

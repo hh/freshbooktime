@@ -36,7 +36,16 @@ class CacheCommandLine
     o.on('--year=[YEAR]'      ) { |x| @opt[:year]    = x.to_i  }
     o.on('--period=[ONEORTWO]',
          "Period (1 or 2)"    ) { |x| @opt[:period]  = x.to_i  }
-    o.on('--month=[MONTH]'    ) { |x| @opt[:month]   = x }
+    o.on('--month=[MONTH]'    ) do |month|
+      if Date::MONTHNAMES.include? month
+        @opt[:month] = Date::MONTHNAMES.index(month)
+      elsif [1,2,3,4,5,6,7,8,9,10,11,12].member? month
+        @opt[:month] = month
+      else
+        puts "Month must be one of:"
+        puts Date::MONTHNAMES
+      end
+    end
     o.on('--config=[CONFIG]'  ) { |x| @opt[:myconf]   = x }
     o.on('--username=USERNAME') { |x| @opt[:username] = x }
     o.on('--display-type=[TYPE]',   :OPTIONAL,
@@ -72,15 +81,6 @@ class CacheCommandLine
                      return nil
                    end
     # Month
-    if Date::MONTHNAMES.include? @opt[:month]
-      @opt[:month] = Date::MONTHNAMES.index(@opt[:month])
-    elsif [1,2,3,4,5,6,7,8,9,10,11,12].member? @opt[:month]
-      nil
-    else
-      puts "Month must be one of:"
-      puts Date::MONTHNAMES
-      return nil
-    end
 
     #load config file
     @opt.update(YAML.load_file(@opt[:myconf]))
@@ -91,7 +91,7 @@ class CacheCommandLine
       puts @opt.to_yaml
       exit
     end
-    puts @opt.to_yaml
+
     return @opt
   end
 
@@ -101,7 +101,7 @@ class Cache
   attr_accessor :opt
   def initialize
     @opt=CacheCommandLine.new.opt
-    puts @opt.to_yaml
+
     FreshBooks.setup(@opt[:apihost],
                      @opt[:apikey])
     ActiveRecord::Base.logger = Logger.new(STDERR)
@@ -115,9 +115,9 @@ class Cache
   def run
     puts "Start at #{DateTime.now}\n\n" if @opt[:verbose]
     tsdata_gen
-    puts @total
-    puts @week_totals.to_yaml
-    puts @week_sheets.to_yaml
+    #puts @total
+    #puts @week_totals.to_yaml
+    #puts @week_sheets.to_yaml
     puts @tsdata.to_yaml
     puts "\nFinished at #{DateTime.now}" if @opt[:verbose]
   end
@@ -172,14 +172,15 @@ class Cache
     period_list.each do |start,stop|
       weektotal=0
       start.upto(stop) { |thisday|
-        # SOMETHING.get_user_time_entries_for_day('chris',thisday).eachn|
-        # end
-        # TimeEntry.find_all_by_staff__id_and_date(
-        #     Staff.find_by_username(@opt[:username]
-        #                            ).staff_id,thisday).each do |e|
-        # there are issues with not having access to staff_id
-        # if you are not an admin
-        TimeEntry.find_all_by_date(thisday).each do |e|
+# tt=TimeEntry.find_all_by_staff__id(
+#             Staff.find_by_username('chris').staff_id,
+#                                    :conditions => {
+#                                      :date => Date::civil(2009,12,1) ..
+#                                      Date::civil(2009,12,31),}
+#                                    )
+        Staff.find_by_username(@opt[:username]
+                               ).time_entries.find_all_by_date(
+                           thisday).each do |e|
           weektotal+=e.hours
           project = Project.find_by_project_id(e.project__id)
           if not @week_sheets[thisday]
@@ -208,14 +209,15 @@ class Cache
     tsname += [Date::MONTHNAMES[day_start.month]," ",
                day_start.day,', ',day_start.year].join("")
     tsname += " to "
--    tsname += [Date::MONTHNAMES[day_end.month]," ",
+    tsname += [Date::MONTHNAMES[day_end.month]," ",
                day_end.day,', ',day_end.year].join("")
     weeklist = pull_from_cache
+    staff= Staff.find_by_username(@opt[:username])
     @tsdata={
-      :name => @opt[:name],
+      :name => staff.first_name + ' ' + staff.last_name, # @opt[:name],
       :mycompany => @opt[:company],
-      :myphone => @opt[:phone],
-      :myemail => @opt[:email],
+      :myphone => staff.business_phone, # @opt[:phone],
+      :myemail => staff.email, # @opt[:email],
       :totalhours => @total,
       :weeksheets => @week_sheets,
       :timesheet_title => tsname,
@@ -225,11 +227,5 @@ class Cache
   end
 end
 
-# tt=TimeEntry.find_all_by_staff__id(
-#             Staff.find_by_username('chris').staff_id,
-#                                    :conditions => {
-#                                      :date => Date::civil(2009,12,1) ..
-#                                      Date::civil(2009,12,31),}
-#                                    )
 x=Cache.new
 x.run

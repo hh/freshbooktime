@@ -616,8 +616,6 @@ module FreshBooks
       'task_id' => Fixnum, 'hours' => Float , 'staff_id' => Fixnum}
     MUTABILITY = { :staff_id => :read_only }
 
-    MUTABILITY = { :staff_id => :read_only }
-
     def create
       resp = FreshBooks::call_api('time_entry.create', 'time_entry' => self)
       if resp.success?
