@@ -38,6 +38,6 @@ tefile = ARGV[0] || die("ERROR: no time entry file given\n" + usage)
 fts = FreshTimeSheet.new($config)
 
 timeentries = YAML.load_file(tefile)
-timeentries.each do |e| 
+timeentries.each do |e|
   fts.add_entry(e)
 end

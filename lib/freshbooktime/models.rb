@@ -21,6 +21,15 @@ class Staff < ActiveRecord::Base
 end
 
 class TimeEntry < ActiveRecord::Base
+  named_scope :clientname, lambda { |clientname|
+    { :conditions => {:client => Client.find_by_name(clientname)}
+    }}
+  named_scope :username, lambda { |username|
+    { :conditions => {:staff => Staff.find_by_username(username)}
+    }}
+  named_scope :daterange, lambda { |daterange|
+    { :conditions => {:date => daterage}
+    }}
   belongs_to :project
   belongs_to :task
   belongs_to :staff

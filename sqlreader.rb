@@ -98,7 +98,7 @@ class CacheCommandLine
 end
 
 class Cache
-  attr_accessor :opt
+  attr_accessor :opt, :tsdata
   def initialize
     @opt=CacheCommandLine.new.opt
 
@@ -113,13 +113,10 @@ class Cache
   end
 
   def run
-    puts "Start at #{DateTime.now}\n\n" if @opt[:verbose]
     tsdata_gen
     #puts @total
     #puts @week_totals.to_yaml
     #puts @week_sheets.to_yaml
-    puts @tsdata.to_yaml
-    puts "\nFinished at #{DateTime.now}" if @opt[:verbose]
   end
 
 
@@ -163,7 +160,6 @@ class Cache
   def pull_from_cache
     # need to pull client_id from config or server( or server cache)
     client_id = 13 #client_config[:catalis][:client_id]
-    puts "Pulling data from active record"
     period_list = list_for_period
     @total=0
     @week_totals={}
@@ -171,6 +167,7 @@ class Cache
     puts period_list.to_yaml if @opt[:verbose]
     period_list.each do |start,stop|
       weektotal=0
+      this_week_sheet={}
       start.upto(stop) { |thisday|
 # tt=TimeEntry.find_all_by_staff__id(
 #             Staff.find_by_username('chris').staff_id,
@@ -183,14 +180,14 @@ class Cache
                            thisday).each do |e|
           weektotal+=e.hours
           project = Project.find_by_project_id(e.project__id)
-          if not @week_sheets[thisday]
-            @week_sheets[thisday] = [[e.hours,project.name,e.notes]]
+          if not this_week_sheet[thisday]
+            this_week_sheet[thisday] = [[e.hours,project.name,e.notes]]
           else
-            @week_sheets[thisday] << [e.hours,project.name,e.notes]
+            this_week_sheet[thisday] << [e.hours,project.name,e.notes]
           end
         end
       }
-
+      @week_sheets[[start,stop]]=this_week_sheet
       #ts=@fb.timesheet_for_client(client_id,start,stop)
       @week_totals[[start,stop]]=weektotal
       @total += weektotal
@@ -219,7 +216,8 @@ class Cache
       :myphone => staff.business_phone, # @opt[:phone],
       :myemail => staff.email, # @opt[:email],
       :totalhours => @total,
-      :weeksheets => @week_sheets,
+      :weeksheet => @week_sheets,
+      :weektotals => @week_totals,
       :timesheet_title => tsname,
       #:customer_html_logo => client_config[:catalis][:html_logo]
     }
@@ -227,5 +225,79 @@ class Cache
   end
 end
 
+class Output
+#  def get_binding
+#    binding
+#  end
+  def render_timesheet(type=:yaml)
+    tsdata = @tsdata
+    if type == :yaml
+      rdata = @tsdata.to_yaml
+    elsif type == :text
+      tmplfile = "templates/timesheet_tmpl.rtxt"
+      template = File.open(tmplfile).read
+      message = ERB.new(template, 0, "%<>")
+      rdata = message.result(binding)
+      #rdata = message.result
+    elsif type == :html
+      tmplfile = "templates/timesheet_tmpl.rhtml"
+      template = File.open(tmplfile).read
+      message = ERB.new(template, 0, "%<>")#, @tsdata)
+      rdata = message.result(binding)
+      # rdata = "Render HTML and save NOT FINISHED"
+    else
+      # "Unknown type #{type}"
+      rdata = nil
+    end
+    rdata
+  end
+
+  def save_timesheet(filename, type=:yaml)
+    puts "Looking for #{filename}"
+    return false if File.exist?(filename)
+    puts "Rendering data of type #{type}"
+    rdata = render_timesheet(type)
+    out = File.new(filename, "w+")
+    out.puts rdata
+    true
+  end
+
+  def display_timesheet(type=:text)
+    puts render_timesheet(type)
+  end
+
+  def export
+    # need to pull customer_name from config or server( or server cache)
+    customer_name = "catalis" #client_config[:catalis][:name]
+
+    puts "Working on timesheet for #{customer_name}:"
+
+    if @opt[:outfile].nil?
+      display_timesheet(@opt[:displaytype])
+    else
+      ext = @opt[:outfile].match(/\.(.*)$/)[1]
+      type = case ext
+             when 'yml'; :yaml
+             when 'html'; :html
+             when 'txt','text'; :text
+             else nil
+             end
+      if save_timesheet(@opt[:outfile], type)
+        puts "Time sheet saved to #{@opt[:outfile]} as type #{type.inspect}"
+        puts " because of #{ext}"
+      else
+        puts "Could not save data to file! Does it already exist?"
+      end
+    end
+    #generate template
+  end
+
+  def initialize(opt,tsdata)
+    @opt=opt
+    @tsdata=tsdata
+  end
+end
 x=Cache.new
 x.run
+o=Output.new(x.opt,x.tsdata)
+o.export

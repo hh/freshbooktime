@@ -66,18 +66,20 @@
           <td colspan="11"></td></tr><tr><td height="5" colspan="11"></td>
         </tr>
 
-        <% @tsdata[:weeksheets].keys.sort.each do |range| %>
-          <% timesheet = @tsdata[:weeksheets][range] %>
-          <% week_start = range[0] %><% week_end = range[1] %><% weekly_total = timesheet[:weekly_total] %>
+        <% @tsdata[:weeksheet].keys.sort.each do |range| %>
+          <% timesheet = @tsdata[:weeksheet][range] %>
+          <% week_start = range[0] %>
+        <% week_end = range[1] %>
+        <% weekly_total = @tsdata[:weektotals][range] %>
 
           <tr height="15">
             <td bgcolor="#CCCCCC" colspan="10" align="left">
               &nbsp;&nbsp;&nbsp;&nbsp;<strong>Week <%= week_start %> - <%= week_end %></strong></td>
           </tr>
 
-          <%# timesheet[:weekly_timesheet].each do |date,entries| %>
-          <% timesheet[:weekly_timesheet].keys.sort.each do |date| %>
-            <% entries = timesheet[:weekly_timesheet][date] %>
+          <%# timesheet.each do |date,entries| %>
+          <% timesheet.keys.sort.each do |date| %>
+            <% entries = timesheet[date] %>
             <% dateshown = false %>
 
             <% entries.each do |hours,project,note| %>
